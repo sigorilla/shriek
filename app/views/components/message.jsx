@@ -149,12 +149,10 @@ var ChatComponent = function (socket) {
       var _this = this; // чтобы потом найти текстовое поле
       var text = this.refs.text.getDOMNode().value; // получаем текст
       var submitButton = this.refs.submitButton.getDOMNode(); // получаем кнопку
-      submitButton.innerHTML = 'Posting message...'; // отключаем кнопку и меняем текст
       submitButton.setAttribute('disabled', 'disabled');
 
       this.props.submitMessage(text, function (err) { // вызываем submitMessage, передаем колбек
         _this.refs.text.getDOMNode().value = '';
-        submitButton.innerHTML = 'Post message';
         submitButton.removeAttribute('disabled');
       });
 
@@ -194,10 +192,12 @@ var ChatComponent = function (socket) {
         <div className='send'>
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             <textarea className="send__text" onKeyDown={this.handleKeyDown} onKeyUp={this.resize} onInput={this.resize} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
-            {messagePlugins.map(function (PluginComponent) {
-              return <PluginComponent/>;
-            })}
-            <button type="submit" className="hidden" ref="submitButton">Post message</button>
+            <div className="send__plugins">
+              {messagePlugins.map(function (PluginComponent) {
+                return <PluginComponent />;
+              })}
+            </div>
+            <button type="submit" className="send__button btn" ref="submitButton">Send</button>
           </form>
         </div>
       );
