@@ -124,7 +124,7 @@ var ChatComponent = function (socket) {
       return (
         <div className={classes.join(' ')}>
           <MessageDate date={this.props.message.created_at}/>
-          <span className="msg__author">{this.props.message.username}: </span>
+          <MessageAuthor username={this.props.message.username} />
           <div
             className="msg__text"
             dangerouslySetInnerHTML={{__html: message}} />
@@ -207,6 +207,55 @@ var ChatComponent = function (socket) {
       return (
         <span className='msg__date' title={fullDate}>{date}</span>
       )
+    }
+  });
+
+  var MessageAuthor = React.createClass({
+    getInitialState: function () {
+      return {
+        username: this.props.username,
+        user: {
+          full_name: '',
+          setting: {
+            image: '',
+            email: ''
+          }
+        },
+        showInfo: false
+      };
+    },
+
+    componentDidMount: function () {
+      var _this = this;
+      // socket.on('user info', function (data) {
+      //   if (data.status === 'ok') {
+      //     if (data.user.username === _this.state.username) {
+      //       _this.setState({user: data.user});
+      //     }
+      //   }
+      // });
+    },
+
+    showUserInfo: function () {
+      var _this = this;
+      // socket.emit('user info', {username: _this.props.username});
+      _this.setState({showInfo: !_this.state.showInfo});
+    },
+
+    render: function () {
+      return (
+        <span className="msg__author">
+          {this.state.showInfo === true && (
+            <div className="popup popup__user">
+              <img src={this.state.user.setting.image} />
+              <div>Name: {this.state.user.full_name}</div>
+              <div>Email: {this.state.user.setting.email}</div>
+            </div>
+          )}
+          <span className="msg__author-name" onClick={this.showUserInfo}>{this.state.username}</span>
+          <span className="msg__author-divider">:</span>
+        </span>
+      );
     }
   });
 
