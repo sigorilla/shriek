@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - "4.0.0"
+  - 4.0.0
 
 branches:
   only:
@@ -11,31 +11,17 @@ branches:
 services:
   - mongodb
 
-addons:
-  ssh_known_hosts: 128.199.39.245
-
-before_install:
-  - openssl aes-256-cbc -K $encrypted_48afa7b4060f_key -iv $encrypted_48afa7b4060f_iv
-    -in deploy_key.enc -out deploy_key -d
-
 install:
-  - npm install --production
-  - npm run init
+  - npm i
 
 script:
-  # test running
-
-after_success:
-  - chmod 600 deploy_key
-  - mv deploy_key ~/.ssh/id_rsa
+  # No
 
 deploy:
-  - provider: script
-    script: "sh scripts/deploy-production.sh"
-    on:
-      branch: master
-
-  - provider: script
-    script: "sh scripts/deploy-dev.sh"
-    on:
-      branch: develop
+  provider: heroku
+  api_key:
+    secure: moEnB3/xoHC/BQ4XE+rXaI1aNTn0jz3NyI20P2lvymyRhJVH0XSe7AcusVyCxsc6+atqkvVujMC/6lzvvxu1wpVyhQTrJlQ6GeQe06UlgecHpPK0SqCo9VmWCuIO4UqXaeQ0RhbBMHEm/bTZQR9Me/U1uoWDVG5Vpw+DddzPjaFTNyo9FYbSLXUJ1qAFyqTVtZWKeCOrlnHVdTaoMhRcQQF+EvbzYsdBubGCdIs6QH0iB41AOs/pqNTmKeC6xZUFjLjak6/A0zsx16/swt5GKxZNOhO7jhjZbK/nobfjjgUqgkR5L9eo3AWoe2MjUEOJLx/z6K4LTUruU3NWwfkE8zcvzh9QITGshOavXh8dpz9/2QQHgGj9s9SSNzjVo4ZmSJK3Tgp3TJKwul22ekvaQI1KOqdFXV4zvmz0rA8IyH/Xr3JgDB+o4w7lSK7aS7KgS/Ji6A528dhw/6QJzWWN+8ImcoyQHZzgRVCnIXsglVHeARGEXUTpwjOxQKqq8dYeN/XaTKcuMrJk4CdTSdbZBXAPJRDfPg66ro1hXXGQZ8PH3FPOO/DCvV86jQ73VBDzdjI7bl7lqxnuaq0QCH6YkOHyjtcdpi5EBSxWxdsQoR1N1i+9pX4OTglxDMz0Fb4yeHptwFi8mKiuH7C+exBcIymCTMrSirXwquZBujM1Q+Y=
+  app: shriek-sigorilla
+  on:
+    repo: sigorilla/shriek
+    branch: develop

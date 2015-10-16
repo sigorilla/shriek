@@ -7,7 +7,7 @@
     "url": "https://github.com/shri-2015-org/shriek/issues"
   },
   "scripts": {
-    "init": "sh ./scripts/init-dev.sh"
+    "run": "node index.js"
   },
   "license": "MIT",
   "main": "index.js",
@@ -52,10 +52,5 @@
   },
   "devDependencies": {
     "ghooks": "^0.3.2"
-  },
-  "config": {
-    "ghooks": {
-      "pre-commit": "sh ./git-hooks/pre-commit"
-    }
   }
 }

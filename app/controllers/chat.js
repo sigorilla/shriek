@@ -6,7 +6,7 @@ var io = require('socket.io')(server);
 var mongoose = require('mongoose');
 var config = require('../configs/config');
 var session = require('express-session');
-var port = config.get('port') || 3000;
+var port = config.get('port') || 8080;
 
 // passportjs
 var passport = require('passport');
@@ -25,7 +25,7 @@ switch (process.env.NODE_ENV) {
 }
 
 server.listen(port, function () {
-  mongoose.connect(config.get('mongoose:uri'));
+  mongoose.connect(process.env.MONGO_LINK);
   var db = mongoose.connection;
 
   db.on('error', function (err) {
