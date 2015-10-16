@@ -19,7 +19,11 @@ var SearchResultComponent = function (socket) {
       var Messages = (<div>Loading messages...</div>);
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
-          return (<SearchResult message={message} key={'search' + message._id} handleClose={_this.handleClose} />);
+          return (<SearchResult
+            message={message}
+            key={'search' + message._id}
+            handleClose={_this.handleClose} />
+          );
         });
       }
       return (
@@ -66,6 +70,7 @@ var SearchResultComponent = function (socket) {
     },
 
     render: function () {
+      var _this = this;
       var localDate = new Date(this.props.message.created_at);
       var hour = localDate.getHours();
       var minutes = localDate.getMinutes();
@@ -74,9 +79,13 @@ var SearchResultComponent = function (socket) {
       var month = localDate.getMonth();
       var fullDate = date + ' ' + ('0' + day).slice(-2) + '/' +
         ('0' + month).slice(-2) + '/' + localDate.getFullYear();
+
+      var currChannel = ChannelsStore.getState().channels.filter(function (channel) {
+        return channel.slug === _this.props.message.channel;
+      })[0].name;
       return (
         <div className='search-result'>
-          <span className='search-result__author'>{this.props.message.username} ({this.props.message.channel})</span>
+          <span className='search-result__author'>{this.props.message.username} в {currChannel}</span>
           <span className='search-result__date'>{fullDate}</span>
           <div
             data-id={this.props.message._id}
