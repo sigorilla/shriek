@@ -24,7 +24,8 @@ deploy:
   provider: heroku
   api_key:
     secure: moEnB3/xoHC/BQ4XE+rXaI1aNTn0jz3NyI20P2lvymyRhJVH0XSe7AcusVyCxsc6+atqkvVujMC/6lzvvxu1wpVyhQTrJlQ6GeQe06UlgecHpPK0SqCo9VmWCuIO4UqXaeQ0RhbBMHEm/bTZQR9Me/U1uoWDVG5Vpw+DddzPjaFTNyo9FYbSLXUJ1qAFyqTVtZWKeCOrlnHVdTaoMhRcQQF+EvbzYsdBubGCdIs6QH0iB41AOs/pqNTmKeC6xZUFjLjak6/A0zsx16/swt5GKxZNOhO7jhjZbK/nobfjjgUqgkR5L9eo3AWoe2MjUEOJLx/z6K4LTUruU3NWwfkE8zcvzh9QITGshOavXh8dpz9/2QQHgGj9s9SSNzjVo4ZmSJK3Tgp3TJKwul22ekvaQI1KOqdFXV4zvmz0rA8IyH/Xr3JgDB+o4w7lSK7aS7KgS/Ji6A528dhw/6QJzWWN+8ImcoyQHZzgRVCnIXsglVHeARGEXUTpwjOxQKqq8dYeN/XaTKcuMrJk4CdTSdbZBXAPJRDfPg66ro1hXXGQZ8PH3FPOO/DCvV86jQ73VBDzdjI7bl7lqxnuaq0QCH6YkOHyjtcdpi5EBSxWxdsQoR1N1i+9pX4OTglxDMz0Fb4yeHptwFi8mKiuH7C+exBcIymCTMrSirXwquZBujM1Q+Y=
-  app: shriek-sigorilla
+  app:
+    master: shriek-sigorilla
+    develop: shriek-sigorilla-dev
   on:
     repo: sigorilla/shriek
-    branch: develop
