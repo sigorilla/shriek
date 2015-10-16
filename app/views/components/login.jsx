@@ -13,6 +13,7 @@ var LoginPassport = require('../../views/components/login-passport.jsx')(socket)
 var AuthStore = require('./../../stores/AuthStore')(socket);
 var AuthActions = require('./../../actions/AuthActions');
 
+  var ModalComponent = require('../../views/components/modal.jsx');
 
 // askLogin component
   var AskLogin = React.createClass({
@@ -178,25 +179,26 @@ var AuthActions = require('./../../actions/AuthActions');
         'form__text': true,
         'invalid': this.state.passInvalid
       });
+      var body = (
+        <form className="form login__box" onSubmit={this.handleLogin}>
+          <div className="form__row">
+            {this.state.error && (
+              <LoginError error={this.state.error} />
+            )}
+          </div>
+          {!this.state.passportInit && (
+            <LoginDefault classUser={classesUser} classPass={classesPassword} handleName={this.handleNameChange} handlePassword={this.handlePasswordChange} />
+          )}
+          {this.state.passportInit && (
+            <LoginPassport classPass={classesPassword} handlePassword={this.handlePasswordChange}/>
+          )}
+        </form>
+      );
 
       return (
         <div>
           {this.state.logged == false && (
-            <div className="modal login__box">
-              <form className="form modal__body" onSubmit={this.handleLogin}>
-                <div className="form__row">
-                  {this.state.error && (
-                    <LoginError error={this.state.error} />
-                  )}
-                </div>
-                {!this.state.passportInit && (
-                  <LoginDefault classUser={classesUser} classPass={classesPassword} handleName={this.handleNameChange} handlePassword={this.handlePasswordChange} />
-                )}
-                {this.state.passportInit && (
-                  <LoginPassport classPass={classesPassword} handlePassword={this.handlePasswordChange}/>
-                )}
-              </form>
-            </div>
+            <ModalComponent header="Login" body={body} />
           )}
         </div>
       );

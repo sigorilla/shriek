@@ -97,7 +97,13 @@ var MessagesActions = alt_obj.createActions({
     socket.on('channel get', function (data) {
       _this.actions.updateMessages(data);
       _this.actions.updateSkip(data.newSkip);
-      _this.actions.scrollChat((data.indata.scrollAfter !== undefined ? data.indata.scrollAfter : false));
+      if (data.hasOwnProperty('indata')) {
+        _this.actions.scrollChat(
+          (data.indata.hasOwnProperty('scrollAfter')
+            ? data.indata.scrollAfter
+            : false)
+        );
+      }
     });
 
     window.registerMessagePlugin = _this.actions.registerPlugin;

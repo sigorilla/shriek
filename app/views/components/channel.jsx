@@ -3,6 +3,8 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
 var ChannelsActions = require('./../../actions/ChannelsActions'); // подключаем экшены
 var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
+  var ModalComponent = require('../../views/components/modal.jsx');
+
   var ChannelsList = React.createClass({
     getInitialState: function () {
       return ChannelsStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
@@ -186,35 +188,39 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
     },
 
     render: function () {
-      return (
-        <div className="modal">
-          <form className="form modal__body" onSubmit={this.handleSubmit}>
-            <h2 className="modal__heading heading">Добавьте канал</h2>
-            <div className="form__row">
-                  {ChannelsStore.getState().hasError &&(
-                    <div>{ChannelsStore.getState().hasError}</div>
-                  )}
-                </div>
-            <div className="form__row">
-              <label className="form__label" htmlFor="channelName"><i className="fa fa-users"></i></label>
-              <input className="form__text" type="text" id="channelName" ref="сhannelName" placeholder="Назовите" />
-            </div>
-            <div className="form__row">
-              <label className="form__label" htmlFor="channelDesc"><i className="fa fa-edit"></i></label>
-              <textarea className="form__textarea" type="text" id="channelDesc" ref="channelDesc" placeholder="Описание канала"></textarea>
-            </div>
-            <div className="form__row userlist">
-              {this.props.userlist.length > 0 && (<div>
-                <input type="checkbox" className="userlist__checkbox" id="privateChannel" onClick={this.handleSetPrivate}/>
-                <label htmlFor="privateChannel">Приватный канал</label>
-                <UserList userlist={this.props.userlist}/>
-              </div>)}
-            </div>
-            <button className="btn" type="submit">Добавить</button>
-            <span> </span>
-            <button className="btn" onClick={this.handleCloseModal} type="button">Закрыть</button>
-          </form>
+      var body = (
+        <form className="form" onSubmit={this.handleSubmit}>
+          <div className="form__row">
+                {ChannelsStore.getState().hasError &&(
+                  <div>{ChannelsStore.getState().hasError}</div>
+                )}
+              </div>
+          <div className="form__row">
+            <label className="form__label" htmlFor="channelName"><i className="fa fa-users"></i></label>
+            <input className="form__text" type="text" id="channelName" ref="сhannelName" placeholder="Назовите" />
+          </div>
+          <div className="form__row">
+            <label className="form__label" htmlFor="channelDesc"><i className="fa fa-edit"></i></label>
+            <textarea className="form__textarea" type="text" id="channelDesc" ref="channelDesc" placeholder="Описание канала"></textarea>
+          </div>
+          <div className="form__row userlist">
+            {this.props.userlist.length > 0 && (<div>
+              <input type="checkbox" className="userlist__checkbox" id="privateChannel" onClick={this.handleSetPrivate}/>
+              <label htmlFor="privateChannel">Приватный канал</label>
+              <UserList userlist={this.props.userlist}/>
+            </div>)}
+          </div>
+        </form>
+      );
+      var footer = (
+        <div>
+          <button className="btn" type="submit">Добавить</button>
+          <span> </span>
+          <button className="btn" onClick={this.handleCloseModal} type="button">Закрыть</button>
         </div>
+      );
+      return (
+        <ModalComponent header="Добавьте канал" body={body} footer={footer} />
       );
     }
   });

@@ -3,6 +3,8 @@ var SearchResultComponent = function (socket) {
   var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подключаем стор
   var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
 
+  var ModalComponent = require('../../views/components/modal.jsx');
+
   var SearchResultList = React.createClass({
     getInitialState: function () {
       return {};
@@ -118,16 +120,18 @@ var SearchResultComponent = function (socket) {
     },
 
     render: function () {
+      var body = (
+        <SearchResultList messages={this.state.messages} handleClose={this.handleClose} />
+      );
+      var footer = (
+        <div>
+          <button className="btn" onClick={this.handleClose} type="button">Close</button>
+        </div>
+      );
       return (
         <div>
           {this.state.showSearchResult == true && (
-            <div className="modal" ref="overlaySearchResult">
-                <div className="form modal__body modal__search">
-                  <h2 className="modal__heading heading">Результат поиска</h2>
-                  <SearchResultList messages={this.state.messages} handleClose={this.handleClose} />
-                  <button className="btn" onClick={this.handleClose} type="button">Close</button>
-                </div>
-            </div>
+            <ModalComponent header="Результат поиска" body={body} footer={footer} />
           )}
         </div>
       );
