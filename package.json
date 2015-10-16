@@ -7,7 +7,9 @@
     "url": "https://github.com/shri-2015-org/shriek/issues"
   },
   "scripts": {
-    "run": "node index.js"
+    "postinstall": "bower install && grunt bower sass build",
+    "start": "node index.js",
+    "test": "mocha"
   },
   "license": "MIT",
   "main": "index.js",
