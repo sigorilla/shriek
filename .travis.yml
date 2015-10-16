@@ -11,9 +11,6 @@ branches:
 services:
   - mongodb
 
-install:
-  - npm i
-
 script:
   # No
 
