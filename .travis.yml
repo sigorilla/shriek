@@ -18,8 +18,7 @@ install:
   - bower install
 
 script:
-  - npm start
-  - npm test
+  # No test
 
 deploy:
   provider: heroku
