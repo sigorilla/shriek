@@ -115,7 +115,7 @@ var ChatComponent = function (socket) {
   var Message = React.createClass({
     render: function () {
       var classes = ['msg__item'];
-      var message = this.props.message.raw || this.props.message.text;
+      var message = this.props.message.text || this.props.message.raw;
 
       if (this.props.message.searched) {
         classes.push('msg__searched');

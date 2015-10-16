@@ -1,5 +1,4 @@
 var alt_obj = require('./../controllers/alt_obj');
-var MessagesActions = require('./MessagesActions');
 
 var ChannelsActions = alt_obj.createActions({
   displayName: 'ChannelsActions', // обязательное поле в ES5

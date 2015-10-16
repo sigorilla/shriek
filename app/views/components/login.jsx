@@ -108,6 +108,9 @@ var AuthActions = require('./../../actions/AuthActions');
             force: true,
             scrollAfter: true
           });
+          socket.emit('channel info', {
+            slug: socket.activeChannel
+          });
 
           // Load info about current user
           socket.emit('user info', {username: socket.username});
