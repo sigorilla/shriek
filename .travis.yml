@@ -11,8 +11,15 @@ branches:
 services:
   - mongodb
 
+install:
+  - npm i --production
+  - npm i -g gulp
+  - npm i -g mocha
+  - bower install
+
 script:
-  # No
+  - npm start
+  - npm test
 
 deploy:
   provider: heroku

@@ -7,7 +7,7 @@
     "url": "https://github.com/shri-2015-org/shriek/issues"
   },
   "scripts": {
-    "postinstall": "bower install && grunt bower sass build",
+    "postinstall": "bower install && gulp bower sass build",
     "start": "node index.js",
     "test": "mocha"
   },
