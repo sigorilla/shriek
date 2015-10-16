@@ -1,7 +1,11 @@
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 
-var configPs = require('../../configs/passport_configs.json');
+try {
+  var configPs = require('../../configs/passport_configs.json');
+} catch (err) {
+  var configPs = {};
+}
 var UserModel = require('../../models/user');
 
 module.exports = function (app, domain) {
@@ -9,8 +13,8 @@ module.exports = function (app, domain) {
   var firstTime = false;
 
   passport.use(new TwitterStrategy({
-    consumerKey: configPs.twitter.key,
-    consumerSecret: configPs.twitter.secret,
+    consumerKey: process.env.TWITTER_KEY || configPs.twitter.key,
+    consumerSecret: process.env.TWITTER_SECRET || configPs.twitter.secret,
     callbackURL: 'http://' + domain + '/auth/twitter/callback'
   }, function (token, tokenSecret, profile, done) {
     UserModel.findOne({
