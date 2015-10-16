@@ -13,16 +13,6 @@ var ChatComponent = function (socket) {
       MessagesStore.listen(this.onChange); // подписываемся на изменения store
       MessagesActions.initMessages(socket);
 
-      socket.emit('channel get', {
-        channel: socket.activeChannel,
-        limit: 20,
-        force: true,
-        scrollAfter: true
-      });
-      socket.emit('channel info', {
-        slug: socket.activeChannel
-      });
-
       window.shriek = {};
       window.shriek.stopscroll = false;
     },

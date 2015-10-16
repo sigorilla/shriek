@@ -13,7 +13,6 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
     componentDidMount: function () {
       ChannelsStore.listen(this.onChange); // подписываемся на изменения store
       ChannelsActions.initChannels(socket); // вызываем функцию, которая внутри экшена подпишется на событие сокета
-      ChannelsActions.getChannels(socket); // вызываем первый экшен, который пулучит список каналов. на самом деле, его нужно делать не здесь, а сразу после успешного логина
     },
 
     componentWillUnmount: function () {
