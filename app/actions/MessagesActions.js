@@ -1,5 +1,6 @@
 var alt_obj = require('./../controllers/alt_obj');
 var actualDate = false;
+
 var MessagesActions = alt_obj.createActions({
 
   displayName: 'MessagesActions', // обязательное поле в ES5
@@ -85,19 +86,66 @@ var MessagesActions = alt_obj.createActions({
   },
 
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
+    try {
+      Notification.requestPermission( function (result) {
+        console.info('Request permission for notification', result);
+      });
+    } catch (e) {
+      console.warn('Your browser does not support notifications');
+    }
     var _this = this;
     actualDate = false;
 
     socket.on('message send', function (data) {
-      if (data.message.channel === socket.activeChannel) { // проверяем, правда ли сообщение пришло в текущий чат?
-        _this.actions.pushMessage({message: data.message});
-        _this.actions.scrollChat(false);
+      if (data.status === 'ok') {
+        // notification API
+        if (data.message.username !== localStorage.userName) {
+          var ChannelsStore = require('./../stores/ChannelsStore')(socket); // подключаем стор
+          var author = ChannelsStore.state.userList.filter(function (user) {
+            return user.username === data.message.username;
+          })[0];
+
+          try {
+            new Audio('beep.mp3').play();
+            var notify = new Notification(author.username, {
+              tag: [data.message.channel, data.message._id].join('|'),
+              body: data.message.raw,
+              icon: author.setting.image
+            });
+            var notifyTimer;
+            notify.onshow = function () {
+              notifyTimer = setTimeout(function () {
+                notify.close();
+              }, 3000);
+            };
+            notify.onclick = function (event) {
+              var gotoMessage = event.target.tag.split('|');
+              _this.actions.highlightMessage(gotoMessage[1]);
+              clearTimeout(notifyTimer);
+              notify.close();
+            };
+          } catch (e) {
+            console.warn('Something is wrong.');
+          }
+        }
+
+        // проверяем, правда ли сообщение пришло в текущий чат?
+        if (data.message.channel === socket.activeChannel) {
+          _this.actions.pushMessage({message: data.message});
+          _this.actions.scrollChat(false);
+        }
       }
     });
     socket.on('channel get', function (data) {
       _this.actions.updateMessages(data);
       _this.actions.updateSkip(data.newSkip);
-      _this.actions.scrollChat((data.indata.scrollAfter !== undefined ? data.indata.scrollAfter : false));
+      if (data.hasOwnProperty('indata')) {
+        _this.actions.scrollChat(
+          (data.indata.hasOwnProperty('scrollAfter')
+            ? data.indata.scrollAfter
+            : false)
+        );
+      }
     });
 
     window.registerMessagePlugin = _this.actions.registerPlugin;

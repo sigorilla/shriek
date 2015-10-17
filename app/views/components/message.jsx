@@ -13,16 +13,6 @@ var ChatComponent = function (socket) {
       MessagesStore.listen(this.onChange); // подписываемся на изменения store
       MessagesActions.initMessages(socket);
 
-      socket.emit('channel get', {
-        channel: socket.activeChannel,
-        limit: 20,
-        force: true,
-        scrollAfter: true
-      });
-      socket.emit('channel info', {
-        slug: socket.activeChannel
-      });
-
       window.shriek = {};
       window.shriek.stopscroll = false;
     },
@@ -125,7 +115,7 @@ var ChatComponent = function (socket) {
   var Message = React.createClass({
     render: function () {
       var classes = ['msg__item'];
-      var message = this.props.message.raw || this.props.message.text;
+      var message = this.props.message.text || this.props.message.raw;
 
       if (this.props.message.searched) {
         classes.push('msg__searched');

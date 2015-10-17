@@ -1,5 +1,7 @@
 var SettingComponent = function (socket) {
 
+  var ModalComponent = require('../../views/components/modal.jsx');
+
   var SettingBlock = React.createClass({
 
     getInitialState: function () {
@@ -90,10 +92,8 @@ var SettingComponent = function (socket) {
     },
 
     render: function () {
-      var formSetting;
-
-      formSetting = (
-        <form className="form modal__body setting" onSubmit={this.handleSave}>
+      var formSetting = (
+        <form className="form setting" onSubmit={this.handleSave}>
           <div className="form__row">
             <label className="form__label" htmlFor="inputFirstName"><i className="fa fa-edit"></i></label>
             <input className="form__text" onChange={this.handleFirstNameChange} type="text" id="inputFirstName" placeholder="First name" value={this.state.first_name} />
@@ -125,18 +125,21 @@ var SettingComponent = function (socket) {
             <label className="form__label" htmlFor="inputDescription"><i className="fa fa-edit"></i></label>
             <textarea className="form__textarea" onChange={this.handleDescriptionChange} id="inputDescription" placeholder="Description" value={this.state.description} />
           </div>
+        </form>
+      );
+
+      var footer = (
+        <div>
           <button className="btn" onClick={this.handleSave} type="submit">Update</button>
           <span> </span>
           <button className="btn" onClick={this.handleClose} type="button">Close</button>
-        </form>
+        </div>
       );
 
       return (
         <div>
           {this.state.opened == true && (
-            <div className="modal" ref="overlaySetting">
-                {formSetting}
-            </div>
+            <ModalComponent header="Profile" body={formSetting} footer={footer} />
           )}
         </div>
       );

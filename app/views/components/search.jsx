@@ -5,22 +5,35 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
   var SearchBlock = React.createClass({
 
     getInitialState: function () {
-      return {};
+      return {
+        query: ''
+      };
     },
 
     handleSearch: function (e) {
-      if ($('#search').val().trim()) {
-        var chList = [];
-        ChannelsStore.getState().channels.map(function(ch) {
-          chList.push(ch.slug);
+      var _this = this;
+
+      if (_this.state.query) {
+        var channelList = ChannelsStore.getState().channels.map(function (channel) {
+          return channel.slug;
         });
 
         socket.emit('search text', {
-          channels: chList,
-          text: $('#search').val().trim()
+          channels: channelList,
+          text: _this.state.query
         });
-        $('#search').val('');
+        _this.setState({query: ''});
       }
+    },
+
+    handleKeyDown: function (e) {
+      if (e.keyCode === 13) {
+        this.handleSearch(e);
+      }
+    },
+
+    handleChange: function (e) {
+      this.setState({query: e.target.value.trim()});
     },
 
     render: function () {
@@ -30,7 +43,7 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
             <label className='form__label' htmlFor='search' onClick={this.handleSearch}>
               <i className='fa fa-search'></i>
             </label>
-            <input className='form__text' type='text' id='search' ref='search'/>
+            <input className='form__text' type='text' id='search' ref='search' onChange={this.handleChange} onKeyDown={this.handleKeyDown} value={this.state.query} />
           </div>
         </div>
       );

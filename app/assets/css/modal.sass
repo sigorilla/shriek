@@ -4,16 +4,31 @@
   left: 0
   right: 0
   bottom: 0
-  background: rgba(0,0,0,.86)
+  background: rgba(0, 0, 0, .4)
   z-index: 100
 
-.modal__body
+.modal__content
   position: relative
   width: 400px
   padding: 20px 0
-  border: 2px solid #404040
-  background: #c4c4c4
+  border: 1px solid #404040
+  border-radius: 10px
+  background: #fff
+  color: #000
   text-align: center
   margin: 50px auto
   max-height: calc(90% - 100px)
   overflow: auto
+
+  .modal__body
+    position: relative
+    max-height: 550px
+    overflow: auto
+
+  .modal__header
+    font-weight: bold
+    font-size: 1.6rem
+    padding-bottom: 10px
+
+  .modal__footer
+    padding-top: 10px

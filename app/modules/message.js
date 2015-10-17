@@ -16,37 +16,34 @@ var MessageModule = function(socket) {
 
     // здесь еще нужно проверять на существование чата, если его нет — создавать
     var res = {};
-    var newMessage = MessageModel({
+    var newMessage = {
       username: socket.username,
       channel: ( data.channel !== undefined ? data.channel : 'general' ), // если канал не пришёл, пишем в general
       text: data.text,
       raw: data.text,
       type: ( data.type !== undefined ? data.type : 'text' ) // если не пришёл тип, то думаем, что это текст
-    });
+    }
 
     shriekPlugins.reduce(function (prev, plugin) {
       return prev.then(function (data) {
-        return new Promise(function (resolveModule, rejectModule) {
+        return new Promise(function (resolve, reject) {
           if (plugin.forEvent === 'channelGet') {
             plugin(data, function (err, result) {
               if (err) {
-                return rejectModule(err);
+                return reject(err);
               }
-              resolveModule(result);
+              resolve(result);
             });
           } else {
-            resolveModule(data);
+            resolve(data);
           }
         })
           .then(function (result) {
             return result;
-          })
-          .catch(function (err) {
-            reject(err);
           });
       });
     }, Promise.resolve([newMessage])).then(function (result) {
-      newMessage.raw = result[0].text;
+      newMessage = MessageModel(newMessage);
 
       var setMessage = new Promise(function (resolve, reject) {
         res.status = 'ok';

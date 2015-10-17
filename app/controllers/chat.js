@@ -4,7 +4,6 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var mongoose = require('mongoose');
-var config = require('../configs/config');
 var session = require('express-session');
 var port = process.env.PORT || 5000;
 
@@ -13,18 +12,7 @@ app.set('port', port);
 // passportjs
 var passport = require('passport');
 
-var domain = '';
-switch (process.env.NODE_ENV) {
-  case 'dev':
-    domain = 'shriek-chat.tk:81';
-    break;
-  case 'production':
-    domain = 'shriek-chat.tk';
-    break;
-  default:
-    domain = 'localhost:3000';
-    break;
-}
+var domain = process.env.DOMAIN || ('localhost:' + app.get('port'));
 
 server.listen(app.get('port'), function () {
   mongoose.connect(process.env.MONGO_LINK || 'mongodb://localhost/shriek');
