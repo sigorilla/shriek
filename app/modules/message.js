@@ -77,6 +77,18 @@ var MessageModule = function(socket) {
         });
     });
   });
+
+  /**
+   * Update message
+   * @param  data
+   * @param  data.username Username, who is updating message
+   * @param  data.message Message for update
+   */
+  socket.on('message update', function (data) {
+    if (data.username === socket.username) {
+      console.log(data.message);
+    }
+  });
 }
 
 module.exports = MessageModule;

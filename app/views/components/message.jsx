@@ -123,6 +123,7 @@ var ChatComponent = function (socket) {
 
       return (
         <div className={classes.join(' ')}>
+          <div className="msg__another"><i className="fa fa-cog"></i></div>
           <MessageDate date={this.props.message.created_at}/>
           <span className="msg__author">{this.props.message.username}: </span>
           <div
