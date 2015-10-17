@@ -1,4 +1,4 @@
-# Shriek Chat [![Build Status](https://travis-ci.org/shri-2015-org/shriek.svg?branch=master)](https://travis-ci.org/shri-2015-org/shriek)
+# Shriek Chat [![Build Status](https://travis-ci.org/sigorilla/shriek.svg?branch=master)](https://travis-ci.org/sigorilla/shriek)
 
 Yet another chat
 
@@ -39,36 +39,6 @@ npm run init
   * assets
     * css
     * js
-
-# Deployment to remote server
-
-## SSH Key for server (on local machine)
-1. `ssh-keygen -t rsa`
-  * Можно изменить имя файла, но лучше этого не делать. Default: `id_rsa`
-  * passphrase не пишите, оставьте пустым
-2. `cat ~/.ssh/id_rsa.pub | ssh shriek@128.199.39.245 'cat >> ~/.ssh/authorized_keys'`
-
-Если все сделано правильно, то выполните:
-
-```bash
-ssh shriek@128.199.39.245 "ssh -T git@github.com"
-```
-
-Вы должны увидеть такое сообщение:
-
-> Hi `sigorilla`! You've successfully authenticated, but GitHub does not provide shell access.
-
-## PM2
-
-Для удаленного обновления используем NPM пакет `pm2`
-
-1. `npm install -g pm2@latest`
-3. `pm2 deploy <environment_key>`, где `environment_key` - либо `dev` (тестирование, разработка), либо `production` (`master` ветка)
-
-## Результат
-
-* Production будет доступна по адресу: shriek-chat.tk
-* Development - по адресу: shriek-chat.tk:81
 
 # API
 ## Description
@@ -455,20 +425,6 @@ socket.emit('<name-of-event>', data);
 | type | String | `required` |
 | created_at | ISODate | `default: now` |
 | attachments | Object | - |
-
-## Config
-
-Configuration file `config.json` example
-
-```json
-{
-  "port": 3000,
-  "mongoose": {
-    "uri": "mongodb://localhost/shriek"
-  }
-}
-
-```
 
 ## Удалить все данные из БД
 
