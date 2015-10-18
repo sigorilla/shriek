@@ -1,11 +1,5 @@
 var passport = require('passport');
 var GitHubStrategy = require('passport-github2').Strategy;
-
-try {
-  var configPs = require('../../configs/passport_configs.json');
-} catch (err) {
-  var configPs = {};
-}
 var UserModel = require('../../models/user');
 
 module.exports = function (app, domain) {
@@ -13,8 +7,8 @@ module.exports = function (app, domain) {
   var firstTime = false;
 
   passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_KEY || configPs.github.key,
-    clientSecret: process.env.GITHUB_SECRET || configPs.github.secret,
+    clientID: process.env.GITHUB_KEY || 'key',
+    clientSecret: process.env.GITHUB_SECRET || 'secret',
     callbackURL: 'http://' + domain + '/auth/github/callback'
   }, function (accessToken, refreshToken, profile, done) {
     UserModel.findOne({

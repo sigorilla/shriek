@@ -1,12 +1,6 @@
 var slugify = require('transliteration').slugify;
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-
-try {
-  var configPs = require('../../configs/passport_configs.json');
-} catch (err) {
-  var configPs = {};
-}
 var UserModel = require('../../models/user');
 
 module.exports = function (app, domain) {
@@ -14,8 +8,8 @@ module.exports = function (app, domain) {
   var firstTime = false;
 
   passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_KEY || configPs.google.key,
-    clientSecret: process.env.GOOGLE_SECRET || configPs.google.secret,
+    clientID: process.env.GOOGLE_KEY || 'key',
+    clientSecret: process.env.GOOGLE_SECRET || 'secret',
     callbackURL: 'http://' + domain + '/auth/google/callback'
   }, function (accessToken, refreshToken, profile, done) {
     var slugName = slugify(profile.displayName, {lowercase: true, separator: '_'});
