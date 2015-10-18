@@ -29,3 +29,16 @@
 .form__row
   display: flex
   margin: 20px
+
+input[type=checkbox]
+  display:none
+
+  & + label:before
+    font-family: FontAwesome
+    display: inline-block
+    content: "\f0c8"
+    letter-spacing: 10px;
+    color: #9c9a9a
+
+  &:checked + label:before
+    content: "\f14a"

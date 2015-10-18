@@ -159,8 +159,8 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
     render: function () {
       return (
         <li className="userlist__item">
-          <label>
-            <input type="checkbox" onClick={this.clickCheckboxHandler} />
+          <input type="checkbox" id={'ch_' + this.props.user.username} onClick={this.clickCheckboxHandler} />
+          <label htmlFor={'ch_' + this.props.user.username}>
             <span>{this.props.user.username}</span>
           </label>
         </li>
