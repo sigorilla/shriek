@@ -183,6 +183,10 @@ var MessagesActions = alt_obj.createActions({
 
   removeTypingUser: function (username) {
     this.dispatch(username);
+  },
+
+  fullReset: function () {
+    this.dispatch();
   }
 });
 

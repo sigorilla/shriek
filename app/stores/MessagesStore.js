@@ -18,7 +18,8 @@ var MessagesStoreFunction = function () {
       hideMoreButton: MessagesActions.HIDE_MORE_BUTTON,
       registerPlugin: MessagesActions.REGISTER_PLUGIN,
       addTypingUser: MessagesActions.ADD_TYPING_USER,
-      removeTypingUser: MessagesActions.REMOVE_TYPING_USER
+      removeTypingUser: MessagesActions.REMOVE_TYPING_USER,
+      fullReset: MessagesActions.FULL_RESET
     });
   }
 
@@ -76,6 +77,13 @@ var MessagesStoreFunction = function () {
       this.typingUsers.splice(position, 1);
     }
   };
+
+  MessagesStore.prototype.fullReset = function () {
+    this.messages = [];
+    this.typingUsers = [];
+    this.plugins = [];
+    this.hideMore = false;
+  }
 
   if (MessagesStoreObj === null) {
     MessagesStoreObj = alt_obj.createStore(MessagesStore);

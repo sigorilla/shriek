@@ -22,13 +22,14 @@ var ChannelsStoreFunction = function (socket) {
       setActiveChannel: ChannelsActions.SET_ACTIVE_CHANNEL,
       setUnreadChannel: ChannelsActions.SET_UNREAD_CHANNEL,
       updateUserList: ChannelsActions.UPDATE_USER_LIST,
-      addUserToNewChannel:ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
-      deleteUserFromNewChannel:ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
+      addUserToNewChannel: ChannelsActions.ADD_USER_TO_NEW_CHANNEL,
+      deleteUserFromNewChannel: ChannelsActions.DELETE_USER_FROM_NEW_CHANNEL,
       createdNewChannel: ChannelsActions.CREATED_NEW_CHANNEL,
-      addNewChannel:ChannelsActions.ADD_NEW_CHANNEL,
-      updateShowModal:ChannelsActions.UPDATE_SHOW_MODAL,
-      setPrivateMoreUsersChannel:ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL,
-      showError:ChannelsActions.SHOW_ERROR
+      addNewChannel: ChannelsActions.ADD_NEW_CHANNEL,
+      updateShowModal: ChannelsActions.UPDATE_SHOW_MODAL,
+      setPrivateMoreUsersChannel: ChannelsActions.SET_PRIVATE_MORE_USERS_CHANNEL,
+      showError: ChannelsActions.SHOW_ERROR,
+      fullReset: ChannelsActions.FULL_RESET
     });
   }
 
@@ -163,6 +164,16 @@ var ChannelsStoreFunction = function (socket) {
       this.newChannel.userList = [];
     }
   };
+
+  ChannelsStore.prototype.fullReset = function () {
+    this.channels = [];
+    this.show_modal = false;
+    this.userList = [];
+    this.newChannel = {};
+    this.newChannel.privateUsers = false;
+    this.newChannel.userList = [];
+    this.hasError = false;
+  }
 
   if (ChannelStoreObj === null) {
     ChannelStoreObj = alt_obj.createStore(ChannelsStore);

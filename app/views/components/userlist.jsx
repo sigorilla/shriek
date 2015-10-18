@@ -16,6 +16,17 @@ var UserComponent = function (socket) {
           _this.setState({users: data.users});
         }
       });
+      socket.on('user leave', function (data) {
+        if (data.status === 'ok') {
+          if (data.user.hasOwnProperty('username')) {
+            if (localStorage.userName === data.user.username) {
+              _this.setState({users: []});
+            }
+          }
+        } else {
+          alert('something unpredictable happened');
+        }
+      });
     },
 
     render: function () {

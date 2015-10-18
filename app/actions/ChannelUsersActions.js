@@ -38,6 +38,10 @@ var ChannelsUsersActions = alt_obj.createActions({
         _this.actions.getUsersChannel(usersList);
       }
     });
+  },
+
+  fullReset: function () {
+    this.dispatch();
   }
 });
 

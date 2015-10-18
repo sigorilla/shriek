@@ -98,6 +98,10 @@ var ChannelsActions = alt_obj.createActions({
 
   setPrivateMoreUsersChannel: function (setPrivate) {
     this.dispatch(setPrivate);
+  },
+
+  fullReset: function () {
+    this.dispatch();
   }
 });
 
