@@ -134,6 +134,13 @@ var ChatComponent = function (socket) {
   });
 
   var MessageForm = React.createClass({
+    getInitialState: function () {
+      return {
+        typing: false,
+        lastTypingTime: 0
+      }
+    },
+
     handleSubmit: function (e) {
       e.preventDefault();
       var _this = this; // чтобы потом найти текстовое поле
@@ -145,7 +152,6 @@ var ChatComponent = function (socket) {
         _this.refs.text.getDOMNode().value = '';
         submitButton.removeAttribute('disabled');
       });
-
     },
 
     resize: function() {
@@ -155,6 +161,7 @@ var ChatComponent = function (socket) {
     },
 
     handleKeyDown: function (e) {
+      var _this = this;
       var pressSubmit = !(e.metaKey || e.ctrlKey) && e.keyCode === 13;
       var pressNewLine = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
 
@@ -174,12 +181,39 @@ var ChatComponent = function (socket) {
       }
 
       this.resize();
+
+      // typing
+      if (!_this.state.typing) {
+        _this.setState({typing: true});
+        socket.emit('user start typing');
+      }
+      _this.setState({lastTypingTime: (new Date()).getTime()});
+
+      setTimeout(function () {
+        var typingTimer = (new Date()).getTime();
+        var timeDiff = typingTimer - _this.state.lastTypingTime;
+        if (timeDiff >= 500 && _this.state.typing) {
+          socket.emit('user stop typing');
+          _this.setState({typing: false});
+        }
+      }, 500);
     },
 
     render: function () {
       var messagePlugins = this.props.plugins || [];
+      var typingUsers = MessagesStore.getState().typingUsers;
+      var showTypingUsers = typingUsers.slice(0, 3).map(function (username) {
+        return '<strong>' + username + '</strong>';
+      });
+      var msgTypingUsers = showTypingUsers.join(', ');
+      var moreTyping = (typingUsers.length > 3) ? (' и еще ' + (typingUsers.length - 3) + ' человек') : '';
+      msgTypingUsers += (typingUsers.length > 1) ? (moreTyping + ' печатают...') : ' печатает...';
+      msgTypingUsers = (typingUsers.length > 0) ? msgTypingUsers : 'Прекрасного тебе дня, человек!';
       return (
-        <div className='send'>
+        <div className="send">
+          <div
+            className="send__info"
+            dangerouslySetInnerHTML={{__html: msgTypingUsers}} />
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             <textarea className="send__text" onKeyDown={this.handleKeyDown} onKeyUp={this.resize} onInput={this.resize} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
             <div className="send__plugins">

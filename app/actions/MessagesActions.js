@@ -148,6 +148,22 @@ var MessagesActions = alt_obj.createActions({
       }
     });
 
+    socket.on('user start typing', function (data) {
+      if (data.status === 'ok') {
+        if (data.user.username !== localStorage.userName) {
+          _this.actions.addTypingUser(data.user.username);
+        }
+      }
+    });
+
+    socket.on('user stop typing', function (data) {
+      if (data.status === 'ok') {
+        if (data.user.username !== localStorage.userName) {
+          _this.actions.removeTypingUser(data.user.username);
+        }
+      }
+    });
+
     window.registerMessagePlugin = _this.actions.registerPlugin;
   },
 
@@ -159,6 +175,14 @@ var MessagesActions = alt_obj.createActions({
 
   highlightMessage: function(_id) {
     this.actions.setSearchedMessage(_id);
+  },
+
+  addTypingUser: function (username) {
+    this.dispatch(username);
+  },
+
+  removeTypingUser: function (username) {
+    this.dispatch(username);
   }
 });
 

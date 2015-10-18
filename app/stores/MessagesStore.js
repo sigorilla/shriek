@@ -5,17 +5,20 @@ var MessagesStoreFunction = function () {
   var MessagesActions = require('./../actions/MessagesActions');
 
   function MessagesStore() {
-    this.messages = []; // это бывший initState у компонента
-    this.plugins = [];
-    this.hideMore = false; // это бывший initState у компонента
     this.displayName = 'MessagesStore'; // обязательное поле для ES5
+    this.messages = []; // это бывший initState у компонента
+    this.typingUsers = [];
+    this.plugins = [];
+    this.hideMore = false;
     this.bindListeners({ // это биндинги на события экшена, сработает только если внутри функции экшена есть dispatch()
       updateMessages: MessagesActions.UPDATE_MESSAGES,  // ключ хеша — функция стора, значение — функция экшена
       pushMessage: MessagesActions.PUSH_MESSAGE,
       setSearchedMessage: MessagesActions.SET_SEARCHED_MESSAGE,
       updateSkip: MessagesActions.UPDATE_SKIP,
       hideMoreButton: MessagesActions.HIDE_MORE_BUTTON,
-      registerPlugin: MessagesActions.REGISTER_PLUGIN
+      registerPlugin: MessagesActions.REGISTER_PLUGIN,
+      addTypingUser: MessagesActions.ADD_TYPING_USER,
+      removeTypingUser: MessagesActions.REMOVE_TYPING_USER
     });
   }
 
@@ -59,6 +62,19 @@ var MessagesStoreFunction = function () {
 
   MessagesStore.prototype.registerPlugin = function (plugin) {
     this.plugins.push(plugin);
+  };
+
+  MessagesStore.prototype.addTypingUser = function (username) {
+    if (this.typingUsers.indexOf(username) == -1) {
+      this.typingUsers.push(username);
+    }
+  };
+
+  MessagesStore.prototype.removeTypingUser = function (username) {
+    var position = this.typingUsers.indexOf(username)
+    if ( position >= 0) {
+      this.typingUsers.splice(position, 1);
+    }
   };
 
   if (MessagesStoreObj === null) {
