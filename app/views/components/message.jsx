@@ -276,6 +276,16 @@ var ChatComponent = function (socket) {
           return user.username
         })
       });
+      // https://github.com/jakiestfu/Mention.js
+      // .mention({
+      //   queryBy: ['name', 'username'],
+      //   users: _this.state.channelsStore.userList.map(function (user) {
+      //     return {
+      //       username: user.username,
+      //       name: [user.setting.first_name, user.setting.last_name].join(' '),
+      //       image: user.setting.image
+      //   })
+      // });
     },
 
     handleAddFile: function (e) {
