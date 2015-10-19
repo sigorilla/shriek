@@ -26,13 +26,14 @@ var ChatComponent = function (socket) {
       this.setState(state);
     },
 
-    submitMessage: function (text, callback) {
-      if (text) {
+    submitMessage: function (data, callback) {
+      if (data.text) {
         var message = {
           username: socket.username,
           channel: socket.activeChannel,
-          text: text,
-          type: 'text'
+          text: data.text,
+          type: 'text',
+          attachments: data.attachments
         };
 
         socket.emit('message send', message);
@@ -128,6 +129,18 @@ var ChatComponent = function (socket) {
           <div
             className="msg__text"
             dangerouslySetInnerHTML={{__html: message}} />
+          <div className="msg__attachments">
+          {this.props.message.attachments.map(function (attach) {
+            return (
+            <div className="msg__attachments_item" key={'msg_' + attach._id}>
+              <a href={attach.url} target="_blank">{attach.name}</a>
+              {attach.type === 'image' && (
+                <img src={attach.url} />
+              )}
+            </div>
+            )
+          })}
+          </div>
         </div>
       );
     }
@@ -137,27 +150,63 @@ var ChatComponent = function (socket) {
     getInitialState: function () {
       return {
         typing: false,
-        lastTypingTime: 0
+        lastTypingTime: 0,
+        FReader: undefined,
+        selectedFile: undefined,
+        attachments: [],
+        loadingAttach: false
       }
+    },
+
+    componentDidMount: function () {
+      var _this = this;
+
+      socket.on('file more', function (data) {
+        var place = data.place * 524288; //The Next Blocks Starting Position
+        var newfile; //The Variable that will hold the new Block of Data
+        var file = _this.state.selectedFile;
+        if (file.slice) {
+          newfile = file.slice(place, place + Math.min(524288, (file.size - place)));
+        } else if (file.webkitSlice) {
+          newfile = file.webkitSlice(place, place + Math.min(524288, (file.size - place)));
+        } else {
+          newfile = file.mozSlice(place, place + Math.min(524288, (file.size - place)));
+        }
+        _this.state.FReader.readAsBinaryString(newfile);
+      });
+
+      socket.on('file done', function (attach) {
+        var tmp = _this.state.attachments;
+        tmp.push(attach);
+        _this.setState({attachments: tmp});
+        _this.refs.submitButton.getDOMNode().removeAttribute('disabled');
+        _this.setState({loadingAttach: false});
+      });
     },
 
     handleSubmit: function (e) {
       e.preventDefault();
       var _this = this; // чтобы потом найти текстовое поле
-      var text = this.refs.text.getDOMNode().value; // получаем текст
       var submitButton = this.refs.submitButton.getDOMNode(); // получаем кнопку
-      submitButton.setAttribute('disabled', 'disabled');
-
-      this.props.submitMessage(text, function (err) { // вызываем submitMessage, передаем колбек
-        _this.refs.text.getDOMNode().value = '';
-        submitButton.removeAttribute('disabled');
-      });
+      if (!this.state.loadingAttach) {
+        var text = this.refs.text.getDOMNode().value; // получаем текст
+        submitButton.setAttribute('disabled', 'disabled');
+        var message = {
+          text: text,
+          attachments: _this.state.attachments
+        }
+        this.props.submitMessage(message, function (err) { // вызываем submitMessage, передаем колбек
+          _this.refs.text.getDOMNode().value = '';
+          _this.setState({attachments: []});
+          submitButton.removeAttribute('disabled');
+        });
+      }
     },
 
     resize: function() {
       var textarea = this.refs.text.getDOMNode();
       textarea.style.height = 'auto';
-      textarea.style.height = (textarea.scrollHeight > 105 ? 105 : textarea.scrollHeight)+'px';
+      textarea.style.height = (textarea.scrollHeight > 105 ? 105 : textarea.scrollHeight + 2)+'px';
     },
 
     handleKeyDown: function (e) {
@@ -170,7 +219,7 @@ var ChatComponent = function (socket) {
       }
 
       if (pressNewLine) {
-        var area = document.getElementsByName('text').item(0);
+        var area = this.refs.text.getDOMNode();
         if ( (area.selectionStart) || (area.selectionStart == '0') ) {
           var start = area.selectionStart;
           var end = area.selectionEnd;
@@ -199,7 +248,45 @@ var ChatComponent = function (socket) {
       }, 500);
     },
 
+    handleAddFile: function (e) {
+      this.refs.attachment.getDOMNode().click();
+    },
+
+    handleFileSelect: function (e) {
+      e.preventDefault();
+      var file = e.target.files[0];
+      this.setState({selectedFile: file});
+      var name = localStorage.userName + (new Date()).getTime().toString();
+      if (!this.state.loadingAttach && this.state.attachments.length < 5 &&
+        file && file.size <= 10485760 && window.File && window.FileReader) {
+        var FReader = new FileReader();
+        FReader.onload = function (event) {
+          socket.emit('file upload', {data: event.target.result, name: name});
+        }
+        this.setState({FReader: FReader});
+        this.refs.submitButton.getDOMNode().setAttribute('disabled', 'disabled');
+        this.setState({loadingAttach: true});
+        socket.emit('file start', {
+          name: name,
+          size: file.size,
+          filename: file.name.replace(/^\.+/, '')
+        });
+      }
+      // TODO:: add msg about errors
+    },
+
+    handleRemoveAttach: function (e) {
+      e.preventDefault();
+      var _this = this;
+
+      var tmp = _this.state.attachments.filter(function (attach) {
+        return attach.name !== e.target.dataset.attach;
+      });
+      this.setState({attachments: tmp});
+    },
+
     render: function () {
+      var _this = this;
       var messagePlugins = this.props.plugins || [];
       var typingUsers = MessagesStore.getState().typingUsers;
       var showTypingUsers = typingUsers.slice(0, 3).map(function (username) {
@@ -209,19 +296,39 @@ var ChatComponent = function (socket) {
       var moreTyping = (typingUsers.length > 3) ? (' и еще ' + (typingUsers.length - 3) + ' человек') : '';
       msgTypingUsers += (typingUsers.length > 1) ? (moreTyping + ' печатают...') : ' печатает...';
       msgTypingUsers = (typingUsers.length > 0) ? msgTypingUsers : 'Прекрасного тебе дня, человек!';
+      var fileAllow = window.File && window.FileReader;
+
       return (
         <div className="send">
+            <div className="send__attachments">
+              {_this.state.attachments.map(function (attach) {
+                return (
+                <div className="send__attachments_item" key={attach.name}>
+                  <a>{attach.name}</a>
+                  <i className="fa fa-remove fa-lg" data-attach={attach.name} onClick={_this.handleRemoveAttach}></i>
+                </div>
+                )
+              })}
+            </div>
           <div
             className="send__info"
             dangerouslySetInnerHTML={{__html: msgTypingUsers}} />
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
+            {fileAllow && (<div className="send__left send__attachment" onClick={this.handleAddFile}>
+                <i className="fa fa-plus fa-lg"></i>
+                <input type="file" ref="attachment" className="hidden" onChange={this.handleFileSelect} />
+            </div>)}
             <textarea className="send__text" onKeyDown={this.handleKeyDown} onKeyUp={this.resize} onInput={this.resize} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
             <div className="send__plugins">
               {messagePlugins.map(function (PluginComponent) {
                 return <PluginComponent />;
               })}
             </div>
-            <button type="submit" className="send__button btn" ref="submitButton">Send</button>
+            <div className="send__right">
+              <button className="send__button btn">
+                <i className="fa fa-paper-plane fa-lg" ref="submitButton" onClick={this.handleSubmit}></i>
+              </button>
+            </div>
           </form>
         </div>
       );

@@ -2,6 +2,21 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
+var Attachments = new Schema({
+  type: {
+    type: String,
+    require: true,
+    default: 'file'
+  },
+  url: {
+    type: String,
+    require: true
+  },
+  name: {
+    type: String
+  }
+});
+
 var Message = new Schema({
   username: {
     type: String,
@@ -26,7 +41,7 @@ var Message = new Schema({
     type: Date,
     default: Date.now
   },
-  attachments: {}
+  attachments: [Attachments]
 });
 
 module.exports = mongoose.model('Message', Message);

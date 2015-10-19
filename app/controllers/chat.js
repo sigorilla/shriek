@@ -6,6 +6,7 @@ var io = require('socket.io')(server);
 var mongoose = require('mongoose');
 var session = require('express-session');
 var port = process.env.PORT || 5000;
+var path = require('path');
 
 app.set('port', port);
 
@@ -29,6 +30,11 @@ server.listen(app.get('port'), function () {
 // Routing
 app.use(express.static('public'));
 app.use('/components', express.static('app/components'));
+
+app.use('/upload/:dir/:file', function (req, res, next) {
+  var file = path.join(__dirname, '../..', 'upload', req.params.dir, req.params.file);
+  res.download(file);
+});
 
 app.use(session({
   genid: function () {

@@ -7,7 +7,7 @@
     "url": "https://github.com/shri-2015-org/shriek/issues"
   },
   "scripts": {
-    "postinstall": "bower install && gulp bower sass build",
+    "postinstall": "sh ./scripts/setup.sh",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\""
   },

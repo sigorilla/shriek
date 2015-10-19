@@ -2,32 +2,76 @@
 .send__form
   position: relative
 
+.send
+  padding: 10px
+  box-shadow: 0 0 10px 0 #000
+
+.send__form
+  display: flex
+  align-items: stretch
+
 .send__plugins
-  position: absolute
-  top: 0
-  right: 0
-  margin-right: 80px
+  position: relative
+  margin: 5px 0
 
 .send__info
   display: block
   padding: 5px 20px
   font-size: .9rem
   font-style: italic
-  box-shadow: 0 0 10px 0 #000
 
 .send__text
   display: block
-  width: 100%
-  padding: 5px 100px 5px 20px
+  // width: 100%
+  flex-grow: 1
+  padding: 5px 20px
   box-sizing: border-box
-  border: 0
-  border-top: 2px solid #E0E0E0
-  border-bottom: 2px solid #E0E0E0
+  border: none
+  border-top: 1px solid #e0e0e0
+  border-bottom: 1px solid #e0e0e0
   resize: none
   font-size: 18px
+  line-height: 20px
   min-height: 36px
 
+  &:first-child
+    border-left: 1px solid #e0e0e0
+    border-radius: 10px 0 0 10px
+
+.send__left
+  display: flex
+  padding: 5px 10px
+  border: 1px solid #e0e0e0
+  border-radius: 10px 0 0 10px
+  align-items: center
+
+.send__right
+  padding: 5px
+  border: 1px solid #e0e0e0
+  border-left: none
+  border-radius: 0 10px 10px 0
+
+.send__attachment,
 .send__button
-  position: absolute
-  top: 1px
-  right: 0px
+  cursor: pointer
+
+.send__attachments
+  .send__attachments_item
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    display: inline-block;
+
+    &:not(:last-child)
+      margin-right: 10px
+
+    a
+      display: inline-block
+      padding: 5px
+      text-decoration: none
+
+    i.fa
+      padding: 5px
+      cursor: pointer
+
+      &:hover
+        background-color: #ddd
