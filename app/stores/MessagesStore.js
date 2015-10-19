@@ -81,7 +81,6 @@ var MessagesStoreFunction = function () {
   MessagesStore.prototype.fullReset = function () {
     this.messages = [];
     this.typingUsers = [];
-    this.plugins = [];
     this.hideMore = false;
   }
 

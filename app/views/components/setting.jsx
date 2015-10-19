@@ -95,12 +95,16 @@ var SettingComponent = function (socket) {
       var formSetting = (
         <form className="form setting" onSubmit={this.handleSave}>
           <div className="form__row">
+            <label className="form__label"><i className="fa fa-user"></i></label>
+            <input className="form__text"type="text" id="inputNick" placeholder="Username" value={localStorage.userName} readonly />
+          </div>
+          <div className="form__row">
             <label className="form__label" htmlFor="inputFirstName"><i className="fa fa-edit"></i></label>
-            <input className="form__text" onChange={this.handleFirstNameChange} type="text" id="inputFirstName" placeholder="First name" value={this.state.first_name} />
+            <input className="form__text" onChange={this.handleFirstNameChange} type="text" id="inputFirstName" placeholder="Имя" value={this.state.first_name} />
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputLastName"><i className="fa fa-edit"></i></label>
-            <input className="form__text" onChange={this.handleLastNameChange} type="text" id="inputLastName" placeholder="Last name" value={this.state.last_name} />
+            <input className="form__text" onChange={this.handleLastNameChange} type="text" id="inputLastName" placeholder="Фамилия" value={this.state.last_name} />
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputEmail"><i className="fa fa-envelope-o"></i></label>
@@ -108,7 +112,7 @@ var SettingComponent = function (socket) {
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputImage"><i className="fa fa-picture-o"></i></label>
-            <input className="form__text" onChange={this.handleImageChange} type="url" id="inputImage" placeholder="Url of Image" value={this.state.image} />
+            <input className="form__text" onChange={this.handleImageChange} type="url" id="inputImage" placeholder="Ваш аватар" value={this.state.image} />
           </div>
           <div className="form__row form__row-radio">
             <span className="form__label"><i className="fa fa-venus-mars"></i></span>
@@ -123,23 +127,25 @@ var SettingComponent = function (socket) {
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputDescription"><i className="fa fa-edit"></i></label>
-            <textarea className="form__textarea" onChange={this.handleDescriptionChange} id="inputDescription" placeholder="Description" value={this.state.description} />
+            <textarea className="form__textarea" onChange={this.handleDescriptionChange} id="inputDescription" placeholder="Описание" value={this.state.description} />
           </div>
         </form>
       );
 
       var footer = (
         <div>
-          <button className="btn" onClick={this.handleSave} type="submit">Update</button>
+          <button className="btn" onClick={this.handleSave} type="submit">
+            <i className="fa fa-floppy-o"></i> Сохранить
+          </button>
           <span> </span>
-          <button className="btn" onClick={this.handleClose} type="button">Close</button>
+          <button className="btn" onClick={this.handleClose} type="button">Закрыть</button>
         </div>
       );
 
       return (
         <div>
           {this.state.opened == true && (
-            <ModalComponent header="Profile" body={formSetting} footer={footer} />
+            <ModalComponent header="Настройки профиля" body={formSetting} footer={footer} />
           )}
         </div>
       );

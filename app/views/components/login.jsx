@@ -208,7 +208,7 @@ var AuthActions = require('./../../actions/AuthActions');
       return (
         <div>
           {this.state.logged == false && (
-            <ModalComponent header="Login" body={body} />
+            <ModalComponent header="Вход" body={body} />
           )}
         </div>
       );

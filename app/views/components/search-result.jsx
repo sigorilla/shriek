@@ -44,8 +44,8 @@ var SearchResultComponent = function (socket) {
         {
           channel: dataset.channel,
           date: dataset.date,
-          limit: -1, rtl:
-          'gte',
+          limit: -1,
+          rtl: 'gte',
           force: true,
           scrollAfter: false
         }
@@ -84,14 +84,15 @@ var SearchResultComponent = function (socket) {
         return channel.slug === _this.props.message.channel;
       })[0].name;
       return (
-        <div className='search-result'>
+        <div
+          className='search-result'
+          onClick={this.handleJump}
+          data-id={this.props.message._id}
+          data-channel={this.props.message.channel}
+          data-date={this.props.message.created_at}>
           <span className='search-result__author'>{this.props.message.username} в {currChannel}</span>
           <span className='search-result__date'>{fullDate}</span>
           <div
-            data-id={this.props.message._id}
-            data-channel={this.props.message.channel}
-            data-date={this.props.message.created_at}
-            onClick={this.handleJump}
             className='search-result__text'
             dangerouslySetInnerHTML={{
               __html: this.props.message.text
@@ -134,7 +135,7 @@ var SearchResultComponent = function (socket) {
       );
       var footer = (
         <div>
-          <button className="btn" onClick={this.handleClose} type="button">Close</button>
+          <button className="btn" onClick={this.handleClose} type="button">Закрыть</button>
         </div>
       );
       return (
