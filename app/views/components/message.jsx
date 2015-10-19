@@ -29,16 +29,20 @@ var ChatComponent = function (socket) {
 
     submitMessage: function (data, callback) {
       if (data.text) {
-        var message = {
-          username: socket.username,
-          channel: socket.activeChannel,
-          text: data.text,
-          type: 'text',
-          attachments: data.attachments
-        };
+        if (data.text.length > 1000) {
+          callback('Максимальная длина сообщения — 1000 символов');
+        } else {
+          var message = {
+            username: socket.username,
+            channel: socket.activeChannel,
+            text: data.text,
+            type: 'text',
+            attachments: data.attachments
+          };
 
-        socket.emit('message send', message);
-        callback();
+          socket.emit('message send', message);
+          callback();
+        }
       } else {
         callback('Enter message, please!');
       }
@@ -198,8 +202,12 @@ var ChatComponent = function (socket) {
           attachments: _this.state.attachments
         }
         this.props.submitMessage(message, function (err) { // вызываем submitMessage, передаем колбек
-          _this.refs.text.getDOMNode().value = '';
-          _this.setState({attachments: []});
+          if (err) {
+            ErrorActions.addError(err);
+          } else {
+            _this.refs.text.getDOMNode().value = '';
+            _this.setState({attachments: []});
+          }
           submitButton.removeAttribute('disabled');
         });
       } else {
