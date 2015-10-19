@@ -1,6 +1,7 @@
 var ChatComponent = function (socket) {
   var MessagesStore = require('./../../stores/MessagesStore')(socket); // подключаем стор
   var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
+  var ErrorActions = require('./../../actions/ErrorActions');
 
   var ChannelUsers = require('../../views/components/channelUsers.jsx')(socket);
 
@@ -162,6 +163,7 @@ var ChatComponent = function (socket) {
       var _this = this;
 
       socket.on('file more', function (data) {
+        _this.refs.progressAttach.getDOMNode().style.width = data.percent + '%';
         var place = data.place * 524288; //The Next Blocks Starting Position
         var newfile; //The Variable that will hold the new Block of Data
         var file = _this.state.selectedFile;
@@ -176,10 +178,10 @@ var ChatComponent = function (socket) {
       });
 
       socket.on('file done', function (attach) {
+        _this.refs.submitButton.getDOMNode().removeAttribute('disabled');
         var tmp = _this.state.attachments;
         tmp.push(attach);
         _this.setState({attachments: tmp});
-        _this.refs.submitButton.getDOMNode().removeAttribute('disabled');
         _this.setState({loadingAttach: false});
       });
     },
@@ -200,6 +202,8 @@ var ChatComponent = function (socket) {
           _this.setState({attachments: []});
           submitButton.removeAttribute('disabled');
         });
+      } else {
+        ErrorActions.addError('Файл еще грузиться. Пожалуйста, подождите.');
       }
     },
 
@@ -260,11 +264,11 @@ var ChatComponent = function (socket) {
       if (!this.state.loadingAttach && this.state.attachments.length < 5 &&
         file && file.size <= 10485760 && window.File && window.FileReader) {
         var FReader = new FileReader();
+        this.refs.submitButton.getDOMNode().setAttribute('disabled', 'disabled');
         FReader.onload = function (event) {
           socket.emit('file upload', {data: event.target.result, name: name});
         }
         this.setState({FReader: FReader});
-        this.refs.submitButton.getDOMNode().setAttribute('disabled', 'disabled');
         this.setState({loadingAttach: true});
         socket.emit('file start', {
           name: name,
@@ -272,7 +276,17 @@ var ChatComponent = function (socket) {
           filename: file.name.replace(/^\.+/, '')
         });
       }
-      // TODO:: add msg about errors
+      if (file) {
+        if (this.state.loadingAttach) {
+          ErrorActions.addError('Файл еще грузиться. Пожалуйста, подождите.');
+        }
+        if (file.size > 10485760) {
+          ErrorActions.addError('Слишком большой файл. Максимальный размер — 10 МБ.');
+        }
+        if (this.state.attachments.length >= 5) {
+          ErrorActions.addError('Максимальное количество файлов в сообщении: 5.');
+        }
+      }
     },
 
     handleRemoveAttach: function (e) {
@@ -296,26 +310,37 @@ var ChatComponent = function (socket) {
       var moreTyping = (typingUsers.length > 3) ? (' и еще ' + (typingUsers.length - 3) + ' человек') : '';
       msgTypingUsers += (typingUsers.length > 1) ? (moreTyping + ' печатают...') : ' печатает...';
       msgTypingUsers = (typingUsers.length > 0) ? msgTypingUsers : 'Прекрасного тебе дня, человек!';
+
       var fileAllow = window.File && window.FileReader;
+
+      var classesBtnAttach = ['fa', 'fa-lg'];
+      if (this.state.loadingAttach) {
+        classesBtnAttach.push('fa-circle-o-notch', 'fa-spin');
+      } else {
+        classesBtnAttach.push('fa-plus');
+      }
 
       return (
         <div className="send">
-            <div className="send__attachments">
-              {_this.state.attachments.map(function (attach) {
-                return (
-                <div className="send__attachments_item" key={attach.name}>
-                  <a>{attach.name}</a>
-                  <i className="fa fa-remove fa-lg" data-attach={attach.name} onClick={_this.handleRemoveAttach}></i>
-                </div>
-                )
-              })}
-            </div>
+          {this.state.loadingAttach && (
+            <div className="send__attachment_progress" ref="progressAttach"></div>
+          )}
+          <div className="send__attachments">
+            {_this.state.attachments.map(function (attach) {
+              return (
+              <div className="send__attachments_item" key={attach.name}>
+                <a>{attach.name}</a>
+                <i className="fa fa-remove fa-lg" data-attach={attach.name} onClick={_this.handleRemoveAttach}></i>
+              </div>
+              )
+            })}
+          </div>
           <div
             className="send__info"
             dangerouslySetInnerHTML={{__html: msgTypingUsers}} />
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
             {fileAllow && (<div className="send__left send__attachment" onClick={this.handleAddFile}>
-                <i className="fa fa-plus fa-lg"></i>
+                <i className={classesBtnAttach.join(' ')}></i>
                 <input type="file" ref="attachment" className="hidden" onChange={this.handleFileSelect} />
             </div>)}
             <textarea className="send__text" onKeyDown={this.handleKeyDown} onKeyUp={this.resize} onInput={this.resize} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
@@ -325,8 +350,8 @@ var ChatComponent = function (socket) {
               })}
             </div>
             <div className="send__right">
-              <button className="send__button btn">
-                <i className="fa fa-paper-plane fa-lg" ref="submitButton" onClick={this.handleSubmit}></i>
+              <button className="send__button btn" type="submit" ref="submitButton">
+                <i className="fa fa-paper-plane fa-lg"></i>
               </button>
             </div>
           </form>

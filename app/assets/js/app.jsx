@@ -30,6 +30,7 @@ var SettingComponent = require('../../views/components/setting.jsx')(socket);
 
 // SEARCH RESULTS
 var SearchResultComponent = require('../../views/components/search-result.jsx')(socket);
+var ErrorComponent = require('../../views/components/error.jsx');
 
 (function () {
   'use strict';
@@ -79,6 +80,7 @@ var SearchResultComponent = require('../../views/components/search-result.jsx')(
           <SettingComponent />
           <LoginComponent />
           <SearchResultComponent />
+          <ErrorComponent />
           <ChatApp />
         </ div >
       );

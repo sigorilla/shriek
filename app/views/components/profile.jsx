@@ -48,7 +48,7 @@ var SearchComponent = require('./search.jsx')(socket);
         <div className='profile'>
           <SearchComponent/>
           <div className="profile__out" onClick={this.logout}><i className="fa fa-power-off fa-lg"></i></div>
-          <div className="profile__tools"><i className="fa fa-cog fa-lg"></i></div>
+          <div className="profile__tools" onClick={this.handleSettingOpen}><i className="fa fa-cog fa-lg"></i></div>
           <div className="profile__img" onClick={this.handleSettingOpen}>
             {this.state.image !== '' && (<img src={this.state.image} />)}
             {this.state.image === '' && (<i className="fa fa-user fa-3x"></i>)}

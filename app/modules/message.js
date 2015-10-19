@@ -145,7 +145,7 @@ var MessageModule = function(socket) {
           fs.unlink('upload/' + name, function () {
             socket.emit('file done', {
               url: outputDir + files[name].filename,
-              type: typeOfFiles[files[name].ext],
+              type: typeOfFiles[files[name].ext] || 'other',
               name: files[name].filename
             });
             delete files[name];
