@@ -3,6 +3,7 @@ var ChatComponent = function (socket) {
   var MessagesActions = require('./../../actions/MessagesActions'); // подключаем экшены
   var ErrorActions = require('./../../actions/ErrorActions');
 
+  var ChannelsStore = require('./../../stores/ChannelsStore')(socket);
   var ChannelUsers = require('../../views/components/channelUsers.jsx')(socket);
 
   var ChatBox = React.createClass({
@@ -159,11 +160,13 @@ var ChatComponent = function (socket) {
         FReader: undefined,
         selectedFile: undefined,
         attachments: [],
-        loadingAttach: false
+        loadingAttach: false,
+        channelsStore: ChannelsStore.getState()
       }
     },
 
     componentDidMount: function () {
+      ChannelsStore.listen(this.onChange);
       var _this = this;
 
       socket.on('file more', function (data) {
@@ -188,6 +191,14 @@ var ChatComponent = function (socket) {
         _this.setState({attachments: tmp});
         _this.setState({loadingAttach: false});
       });
+    },
+
+    componentWillUnmount: function () {
+      ChannelsStore.unlisten(this.onChange);
+    },
+
+    onChange: function (state) {
+      this.setState({channelsStore: state});
     },
 
     handleSubmit: function (e) {
@@ -258,6 +269,13 @@ var ChatComponent = function (socket) {
           _this.setState({typing: false});
         }
       }, 500);
+
+      $(_this.refs.text.getDOMNode()).atwho({
+        at: '@',
+        data: _this.state.channelsStore.userList.map(function (user) {
+          return user.username
+        })
+      });
     },
 
     handleAddFile: function (e) {
