@@ -3,6 +3,13 @@ var fs = require('fs');
 var crypto = require('crypto');
 var aws = require('aws-sdk');
 
+aws.config.update({
+  accessKeyId: AWS_ACCESS_KEY,
+  secretAccessKey: AWS_SECRET_KEY,
+  signatureVersion: 'v4',
+  region: 'eu-central-1'
+});
+
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var S3_BUCKET = process.env.S3_BUCKET_NAME;
@@ -158,13 +165,6 @@ var MessageModule = function(socket) {
         var randomDir = crypto.randomBytes(4).toString('hex');
         var s3File = randomDir + '/' + files[name].filename;
 
-        aws.config.update({
-          accessKeyId: AWS_ACCESS_KEY,
-          secretAccessKey: AWS_SECRET_KEY,
-          signatureVersion: 'v4',
-          region: 'eu-central-1'
-        });
-
         fs.readFile('upload/' + name, function (err, data) {
           if (err) {
             socket.emit('file done', {
@@ -198,7 +198,8 @@ var MessageModule = function(socket) {
                     attach: {
                       url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + s3File,
                       type: typeOfFiles[files[name].ext] || 'other',
-                      name: files[name].filename
+                      name: files[name].filename,
+                      s3_key: s3File
                     }
                   });
 
@@ -229,6 +230,15 @@ var MessageModule = function(socket) {
       var percent = (files[name].downloaded / files[name].filesize) * 100;
       socket.emit('file more', {place: place, percent: percent});
     }
+  });
+
+  socket.on('file remove', function (data) {
+    var s3 = new aws.S3();
+    var params = {
+      Bucket: S3_BUCKET,
+      Key: data.key
+    };
+    s3.deleteObject(params, function (err, s3_data) {});
   });
 }
 

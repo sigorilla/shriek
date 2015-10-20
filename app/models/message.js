@@ -14,6 +14,9 @@ var Attachments = new Schema({
   },
   name: {
     type: String
+  },
+  s3_key: {
+    type: String
   }
 });
 

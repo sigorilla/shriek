@@ -338,10 +338,14 @@ var ChatComponent = function (socket) {
       e.preventDefault();
       var _this = this;
 
-      var tmp = _this.state.attachments.filter(function (attach) {
-        return attach.name !== e.target.dataset.attach;
-      });
-      this.setState({attachments: tmp});
+      try {
+        socket.emit('file remove', {key: e.target.dataset.s3});
+
+        var tmp = _this.state.attachments.filter(function (attach) {
+          return attach.name !== e.target.dataset.attach;
+        });
+        this.setState({attachments: tmp});
+      } catch (er) {}
     },
 
     render: function () {
@@ -375,7 +379,7 @@ var ChatComponent = function (socket) {
               return (
               <div className="send__attachments_item" key={attach.name}>
                 <a>{attach.name}</a>
-                <i className="fa fa-remove fa-lg" data-attach={attach.name} onClick={_this.handleRemoveAttach}></i>
+                <i className="fa fa-remove fa-lg" data-attach={attach.name} data-s3={attach.s3_key} onClick={_this.handleRemoveAttach}></i>
               </div>
               )
             })}
