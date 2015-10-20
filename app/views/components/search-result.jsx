@@ -16,7 +16,7 @@ var SearchResultComponent = function (socket) {
 
     render: function () {
       var _this = this;
-      var Messages = (<div>Loading messages...</div>);
+      var Messages = (<div>Загрузка сообщений...</div>);
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
           return (<SearchResult
@@ -37,7 +37,9 @@ var SearchResultComponent = function (socket) {
   var SearchResult = React.createClass({
     handleJump: function (e) {
       e.preventDefault();
+
       var dataset = e.currentTarget.dataset;
+      var id = dataset.id;
 
       socket.activeChannel = dataset.channel;
       socket.emit('channel get',
@@ -50,7 +52,6 @@ var SearchResultComponent = function (socket) {
           scrollAfter: false
         }
       );
-      var id = dataset.id;
       setTimeout(function () {
         socket.emit('channel get',
           {
@@ -83,6 +84,7 @@ var SearchResultComponent = function (socket) {
       var currChannel = ChannelsStore.getState().channels.filter(function (channel) {
         return channel.slug === _this.props.message.channel;
       })[0].name;
+
       return (
         <div
           className='search-result'
@@ -122,8 +124,7 @@ var SearchResultComponent = function (socket) {
       });
     },
 
-    handleSearch: function (e) {
-    },
+    handleSearch: function (e) {},
 
     handleClose: function (e) {
       this.setState({showSearchResult: false});

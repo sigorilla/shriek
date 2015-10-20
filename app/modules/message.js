@@ -67,7 +67,9 @@ var MessageModule = function(socket) {
         res.status = 'ok';
         res.message = newMessage;
         res.message.created_at = Date.now();
-        socket.emit('message send', res);
+        if (socket.username) {
+          socket.emit('message send', res);
+        }
 
         newMessage.save({runValidators: true}, function (err, data) {
           if (!err) {
@@ -98,12 +100,13 @@ var MessageModule = function(socket) {
 
   socket.on('file start', function (data) {
     var name = data.name;
+    var filename = data.filename.replace(/^\.+/, '').toLowerCase();
     files[name] = {
       filesize: data.size,
       data: '',
       downloaded: 0,
-      ext: (/[.]/.test(data.filename)) ? (/[^.]+$/.exec(data.filename)) : '',
-      filename: data.filename
+      ext: (/[.]/.test(filename)) ? (/[^.]+$/.exec(filename)) : '',
+      filename: filename
     };
     var place = 0;
     try {

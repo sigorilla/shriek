@@ -34,7 +34,7 @@ var ChatComponent = function (socket) {
           callback('Максимальная длина сообщения — 1000 символов');
         } else {
           var message = {
-            username: socket.username,
+            username: localStorage.userName,
             channel: socket.activeChannel,
             text: data.text,
             type: 'text',
@@ -92,16 +92,15 @@ var ChatComponent = function (socket) {
       }
     },
 
-    componentDidUpdate: function () {
+    componentDidUpdate: function () {},
 
-    },
     clickMoreHandler: function() {
       var skip = MessagesStore.getState().skip; // подписываемся на изменения store
       MessagesActions.getMessages(socket, skip);
     },
 
     render: function () {
-      var Messages = (<div>Loading messages...</div>);
+      var Messages = (<div>Загрузка сообщений...</div>);
 
       if (this.props.messages) {
         Messages = this.props.messages.map(function (message) {
@@ -139,7 +138,10 @@ var ChatComponent = function (socket) {
           {this.props.message.attachments.map(function (attach) {
             return (
             <div className="msg__attachments_item" key={'msg_' + attach._id}>
-              <a href={attach.url} target="_blank">{attach.name}</a>
+              <a href={attach.url} target="_blank">
+                <span className="fa fa-file"></span>
+                <span>{attach.name}</span>
+              </a>
               {attach.type === 'image' && (
                 <img src={attach.url} />
               )}
@@ -243,7 +245,7 @@ var ChatComponent = function (socket) {
 
       if (pressNewLine) {
         var area = this.refs.text.getDOMNode();
-        if ( (area.selectionStart) || (area.selectionStart == '0') ) {
+        if (area.selectionStart || area.selectionStart == '0') {
           var start = area.selectionStart;
           var end = area.selectionEnd;
           area.value = area.value.substring(0, start) +
@@ -270,6 +272,7 @@ var ChatComponent = function (socket) {
         }
       }, 500);
 
+      // mention
       $(_this.refs.text.getDOMNode()).atwho({
         at: '@',
         data: _this.state.channelsStore.userList.map(function (user) {
@@ -309,7 +312,7 @@ var ChatComponent = function (socket) {
         socket.emit('file start', {
           name: name,
           size: file.size,
-          filename: file.name.replace(/^\.+/, '')
+          filename: file.name
         });
       }
       if (file) {

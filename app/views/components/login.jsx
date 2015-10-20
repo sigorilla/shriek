@@ -1,24 +1,23 @@
 var LoginComponent = function(socket) {
+  // LOGIN ERROR MODULE
+  var LoginError = require('../../views/components/login-error.jsx')(socket);
 
-// LOGIN ERROR MODULE
-var LoginError = require('../../views/components/login-error.jsx')(socket);
+  // LOGIN DEFAULT MODULE
+  var LoginDefault = require('../../views/components/login-default.jsx')(socket);
 
-// LOGIN DEFAULT MODULE
-var LoginDefault = require('../../views/components/login-default.jsx')(socket);
+  // LOGIN PASSPORT MODULE
+  var LoginPassport = require('../../views/components/login-passport.jsx')(socket);
 
-// LOGIN PASSPORT MODULE
-var LoginPassport = require('../../views/components/login-passport.jsx')(socket);
-
-// ALT-JS STORE INIT
-var AuthStore = require('./../../stores/AuthStore')(socket);
-var AuthActions = require('./../../actions/AuthActions');
+  // ALT-JS STORE INIT
+  var AuthStore = require('./../../stores/AuthStore')(socket);
+  var AuthActions = require('./../../actions/AuthActions');
 
   var ModalComponent = require('../../views/components/modal.jsx');
 
-// askLogin component
+  // askLogin component
   var AskLogin = React.createClass({
 
-    getInitialState: function() {
+    getInitialState: function () {
       var state = Boolean(localStorage.userName);
 
       return {
@@ -33,8 +32,7 @@ var AuthActions = require('./../../actions/AuthActions');
       };
     },
 
-    componentDidMount: function() {
-
+    componentDidMount: function () {
       AuthStore.listen(this.onChange); // подписываемся на изменения store
 
       var username;
@@ -131,7 +129,7 @@ var AuthActions = require('./../../actions/AuthActions');
       this.setState(state);
     },
 
-    handleNameChange: function(e) {
+    handleNameChange: function (e) {
       this.setState({name: e.target.value});
       this.setState({userInit: false});
 
@@ -142,7 +140,7 @@ var AuthActions = require('./../../actions/AuthActions');
       }
     },
 
-    handlePasswordChange: function(e) {
+    handlePasswordChange: function (e) {
       this.setState({password: e.target.value});
       this.setState({passInit: false});
 
@@ -153,13 +151,16 @@ var AuthActions = require('./../../actions/AuthActions');
       }
     },
 
-    handleLogin: function(e) {
+    handleLogin: function (e) {
       e.preventDefault();
       if (this.state != null ) {
         // passport login
         if (this.state.passportInit) {
-          socket.emit('user enter', {username: this.state.passportUser,
-            password: this.state.password, passposrtInit: true})
+          socket.emit('user enter', {
+            username: this.state.passportUser,
+            password: this.state.password,
+            passposrtInit: true
+          });
         }
 
         // local login
@@ -179,7 +180,7 @@ var AuthActions = require('./../../actions/AuthActions');
       }
     },
 
-    render: function() {
+    render: function () {
       var cx = require('classnames');
       var classesUser = cx({
         'form__text': true,

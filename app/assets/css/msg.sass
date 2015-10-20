@@ -78,17 +78,19 @@
   p
     margin: 0
 
-    blockquote
-      padding: 10px 20px
-      margin: 0 0 20px
-      border-left: 5px solid #eee
-
     code
       padding: 2px 4px
       font-size: 90%
       color: #c7254e
       background-color: #f9f2f4
       border-radius: 4px
+
+  blockquote
+    display: inline-block
+    padding: 10px 20px
+    margin: 0 0 10px
+    border-left: 5px solid #eee
+    max-width: 50%
 
   pre
     margin: 0
@@ -136,9 +138,13 @@
       display: inline-block
       padding: 5px
       text-decoration: none
+      color: #111
 
       &:hover
         background-color: #ddd
+
+      span + span
+        margin-left: 10px
 
     img
       margin: 5px

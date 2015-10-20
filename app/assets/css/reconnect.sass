@@ -1,0 +1,26 @@
+.reconnecting
+  position: fixed
+  top: -100%
+  bottom: 100%
+  right: 0
+  left: 0
+  color: #fefefe
+  background: #9b3430
+  line-height: 32px
+  z-index: 1000
+  transition: ease-in 1s all
+
+  &.active
+    top: 0
+    bottom: 0
+    transition: ease-out 0.8s all
+
+  .reconnecting__msg
+    position: absolute
+    bottom: 0
+    left: 0
+    font-size: 2rem
+    padding: 100px
+
+    span + span
+      margin-left: 30px
