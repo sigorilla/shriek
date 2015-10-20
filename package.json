@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "alt": "^0.17.3",
+    "aws-sdk": "*",
     "bower": "^1.5.2",
     "browserify": "^11.1.0",
     "chai": "*",

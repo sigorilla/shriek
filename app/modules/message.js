@@ -1,6 +1,11 @@
 var MessageModel = require('../models/message');
 var fs = require('fs');
 var crypto = require('crypto');
+var aws = require('aws-sdk');
+
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY_ID;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+var S3_BUCKET = process.env.S3_BUCKET_NAME;
 
 var files = {};
 
@@ -106,7 +111,8 @@ var MessageModule = function(socket) {
       data: '',
       downloaded: 0,
       ext: (/[.]/.test(filename)) ? (/[^.]+$/.exec(filename)) : '',
-      filename: filename
+      filename: filename,
+      type: data.type
     };
     var place = 0;
     try {
@@ -120,7 +126,12 @@ var MessageModule = function(socket) {
     }
     fs.open('upload/' + name, 'a', 0755, function (err, fd) {
       if (err) {
-        console.log(err);
+        socket.emit('file done', {
+          status: 'error',
+          error_message: 'Файл не загружен. Попробуйте еще раз.'
+        });
+
+        delete files[name];
       } else {
         files[name].handler = fd;
         socket.emit('file more', {place: place, percent: 0 });
@@ -132,32 +143,82 @@ var MessageModule = function(socket) {
     var name = data.name;
     files[name].downloaded += data.data.length;
     files[name].data += data.data;
-    if(files[name].downloaded === files[name].filesize) {
+    if (files[name].downloaded === files[name].filesize) {
       fs.write(files[name].handler, files[name].data, null, 'Binary', function (err, writen) {
-        fs.close(files[name].handler);
-        var randomDir = crypto.randomBytes(4).toString('hex');
-        var outputDir = 'upload/' + randomDir + '/';
-        try {
-          fs.statSync(outputDir);
-        } catch (err) {
-          fs.mkdirSync(outputDir);
-        }
-        var inp = fs.createReadStream('upload/' + name);
-        var out = fs.createWriteStream(outputDir + files[name].filename);
-        out.on('pipe', function (src) {
-          fs.unlink('upload/' + name, function () {
-            socket.emit('file done', {
-              url: outputDir + files[name].filename,
-              type: typeOfFiles[files[name].ext] || 'other',
-              name: files[name].filename
-            });
-            delete files[name];
+        if (err) {
+          delete files[name];
+
+          return socket.emit('file done', {
+            status: 'error',
+            error_message: 'Файл не загружен. Попробуйте еще раз.'
           });
+        }
+        fs.close(files[name].handler);
+
+        var randomDir = crypto.randomBytes(4).toString('hex');
+        var s3File = randomDir + '/' + files[name].filename;
+
+        aws.config.update({
+          accessKeyId: AWS_ACCESS_KEY,
+          secretAccessKey: AWS_SECRET_KEY,
+          signatureVersion: 'v4',
+          region: 'eu-central-1'
         });
-        inp.pipe(out);
+
+        fs.readFile('upload/' + name, function (err, data) {
+          if (err) {
+            socket.emit('file done', {
+              status: 'error',
+              error_message: 'Файл не загружен. Попробуйте еще раз.'
+            });
+
+            delete files[name];
+          } else {
+            var s3 = new aws.S3();
+
+            s3.putObject({
+              Body: data,
+              Bucket: S3_BUCKET,
+              Key: s3File,
+              Expires: 60,
+              ContentType: files[name].type || '',
+              ACL: 'public-read'
+            }, function (err, s3_data) {
+              if (err) {
+                socket.emit('file done', {
+                  status: 'error',
+                  error_message: 'Файл не загружен. Попробуйте еще раз.'
+                });
+
+                delete files[name];
+              } else {
+                fs.unlink('upload/' + name, function () {
+                  socket.emit('file done', {
+                    status: 'ok',
+                    attach: {
+                      url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + s3File,
+                      type: typeOfFiles[files[name].ext] || 'other',
+                      name: files[name].filename
+                    }
+                  });
+
+                  delete files[name];
+                });
+              }
+            });
+          }
+        });
       });
-    } else if(files[name].data.length > 10485760) {
+    } else if (files[name].data.length > 10485760) {
       fs.write(files[name].handler, files[name].data, null, 'Binary', function (err, writen) {
+        if (err) {
+          delete files[name];
+
+          return socket.emit('file done', {
+            status: 'error',
+            error_message: 'Файл не загружен. Попробуйте еще раз.'
+          });
+        }
         files[name].data = '';
         var place = files[name].downloaded / 524288;
         var percent = (files[name].downloaded / files[name].filesize) * 100;

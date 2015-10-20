@@ -186,11 +186,16 @@ var ChatComponent = function (socket) {
         _this.state.FReader.readAsBinaryString(newfile);
       });
 
-      socket.on('file done', function (attach) {
+      socket.on('file done', function (data) {
+        // catch err
+        if (data.status === 'ok') {
+          var tmp = _this.state.attachments;
+          tmp.push(data.attach);
+          _this.setState({attachments: tmp});
+        } else {
+          ErrorActions.addError(data.error_message);
+        }
         _this.refs.submitButton.getDOMNode().removeAttribute('disabled');
-        var tmp = _this.state.attachments;
-        tmp.push(attach);
-        _this.setState({attachments: tmp});
         _this.setState({loadingAttach: false});
       });
     },
@@ -312,7 +317,8 @@ var ChatComponent = function (socket) {
         socket.emit('file start', {
           name: name,
           size: file.size,
-          filename: file.name
+          filename: file.name,
+          type: file.type
         });
       }
       if (file) {
