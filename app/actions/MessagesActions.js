@@ -87,9 +87,7 @@ var MessagesActions = alt_obj.createActions({
 
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     try {
-      Notification.requestPermission( function (result) {
-        console.info('Request permission for notification', result);
-      });
+      Notification.requestPermission(function (result) {});
     } catch (e) {
       console.warn('Your browser does not support notifications');
     }
