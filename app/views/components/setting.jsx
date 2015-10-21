@@ -26,14 +26,16 @@ var SettingComponent = function (socket) {
 
       socket.on('user info', function (data) {
         if (data.status === 'ok') {
-          _this.setState({
-            email: data.user.setting.email,
-            image: data.user.setting.image,
-            first_name: data.user.setting.first_name,
-            last_name: data.user.setting.last_name,
-            description: data.user.setting.description,
-            sex: data.user.setting.sex
-          });
+          if (data.user.username === localStorage.userName) {
+            _this.setState({
+              email: data.user.setting.email,
+              image: data.user.setting.image,
+              first_name: data.user.setting.first_name,
+              last_name: data.user.setting.last_name,
+              description: data.user.setting.description,
+              sex: data.user.setting.sex
+            });
+          }
         }
       });
 
