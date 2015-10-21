@@ -227,18 +227,18 @@ var ChatComponent = function (socket) {
 
     componentDidMount: function () {
       var _this = this;
-      // socket.on('user info', function (data) {
-      //   if (data.status === 'ok') {
-      //     if (data.user.username === _this.state.username) {
-      //       _this.setState({user: data.user});
-      //     }
-      //   }
-      // });
+      socket.on('user info', function (data) {
+        if (data.status === 'ok') {
+          if (data.user.username === _this.state.username) {
+            _this.setState({user: data.user});
+          }
+        }
+      });
     },
 
     showUserInfo: function () {
       var _this = this;
-      // socket.emit('user info', {username: _this.props.username});
+      socket.emit('user info', {username: _this.props.username});
       _this.setState({showInfo: !_this.state.showInfo});
     },
 

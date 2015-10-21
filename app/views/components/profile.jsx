@@ -1,9 +1,11 @@
 var ProfileComponent = function (socket) {
 
-if (!AuthStore) var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
-var AuthActions = require('./../../actions/AuthActions'); // подключаем экшены
+  if (!AuthStore) {
+    var AuthStore = require('./../../stores/AuthStore')(socket); // подключаем стор
+  }
+  var AuthActions = require('./../../actions/AuthActions'); // подключаем экшены
 
-var SearchComponent = require('./search.jsx')(socket);
+  var SearchComponent = require('./search.jsx')(socket);
 
   var ProfileBlock = React.createClass({
 
@@ -18,7 +20,9 @@ var SearchComponent = require('./search.jsx')(socket);
 
       socket.on('user info', function (data) {
         if (data.status === 'ok') {
-          _this.setState({image: data.user.setting.image});
+          if (data.user.username === localStorage.username) {
+            _this.setState({image: data.user.setting.image});
+          }
         }
       });
 
