@@ -87,9 +87,7 @@ var MessagesActions = alt_obj.createActions({
 
   initMessages: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     try {
-      Notification.requestPermission( function (result) {
-        console.info('Request permission for notification', result);
-      });
+      Notification.requestPermission(function (result) {});
     } catch (e) {
       console.warn('Your browser does not support notifications');
     }
@@ -100,7 +98,7 @@ var MessagesActions = alt_obj.createActions({
       if (data.status === 'ok') {
         // notification API
         if (data.message.username !== localStorage.userName) {
-          var ChannelsStore = require('./../stores/ChannelsStore')(socket); // подключаем стор
+          var ChannelsStore = require('./../stores/ChannelsStore')(socket);
           var author = ChannelsStore.state.userList.filter(function (user) {
             return user.username === data.message.username;
           })[0];

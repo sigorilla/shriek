@@ -43,7 +43,7 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
             <label className='form__label' htmlFor='search' onClick={this.handleSearch}>
               <i className='fa fa-search'></i>
             </label>
-            <input className='form__text' type='text' id='search' ref='search' onChange={this.handleChange} onKeyDown={this.handleKeyDown} value={this.state.query} />
+            <input className='form__text' type='text' id='search' ref='search' onChange={this.handleChange} onKeyDown={this.handleKeyDown} placeholder='Поиск сообщений' value={this.state.query} />
           </div>
         </div>
       );

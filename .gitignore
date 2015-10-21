@@ -12,6 +12,7 @@ public/index.html
 upload
 .idea/
 .DS_Store
+.env
 
 config.json
 deploy_key

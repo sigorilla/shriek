@@ -1,10 +1,10 @@
 {
   "name": "Shriek",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "Yet another chat for Yandex Frontend School",
-  "homepage": "http://128.199.39.245/",
+  "homepage": "http://shriek-sigorilla-dev.herokuapp.com",
   "bugs": {
-    "url": "https://github.com/shri-2015-org/shriek/issues"
+    "url": "https://github.com/sigorilla/shriek/issues"
   },
   "scripts": {
     "postinstall": "sh ./scripts/setup.sh",
@@ -15,10 +15,11 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shri-2015-org/shriek.git"
+    "url": "https://github.com/sigorilla/shriek.git"
   },
   "dependencies": {
     "alt": "^0.17.3",
+    "aws-sdk": "*",
     "bower": "^1.5.2",
     "browserify": "^11.1.0",
     "chai": "*",

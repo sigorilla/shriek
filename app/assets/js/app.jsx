@@ -2,12 +2,6 @@ var app = app || {};
 // Если убираем test.js, то надо раскомментить
 var socket = io();
 
-socket.on('disconnect', function() {
-  if (confirm('Внимание, соединение потеряно, попробуйте перезагрузить страницу.')) {
-    setInterval(function() { location.replace('/') }, 1000);
-  }
-});
-
 socket.activeChannel = 'general';
 
 // CHAT MODULE
@@ -25,12 +19,20 @@ var LoginComponent = require('../../views/components/login.jsx')(socket);
 // PROFILE MODULE
 var ProfileComponent = require('../../views/components/profile.jsx')(socket);
 
+// USER MODULE
+var UserModalComponent = require('../../views/components/user.jsx')(socket);
+
 // SETTING MODULE
 var SettingComponent = require('../../views/components/setting.jsx')(socket);
 
 // SEARCH RESULTS
 var SearchResultComponent = require('../../views/components/search-result.jsx')(socket);
+
+// ERROR COMPONENT
 var ErrorComponent = require('../../views/components/error.jsx');
+
+// RECONNECT COMPONENT
+var ReconnectComponent = require('../../views/components/reconnect.jsx')(socket);
 
 (function () {
   'use strict';
@@ -50,7 +52,7 @@ var ErrorComponent = require('../../views/components/error.jsx');
       var menu, main;
 
       menu = (
-        <div className='nav'>
+        <div className="nav">
           <Title/>
           <ChannelComponent/>
           <UserComponent/>
@@ -77,19 +79,21 @@ var ErrorComponent = require('../../views/components/error.jsx');
     render: function () {
       return (
         <div className="layout">
+          <ReconnectComponent />
           <SettingComponent />
           <LoginComponent />
           <SearchResultComponent />
           <ErrorComponent />
+          <UserModalComponent />
           <ChatApp />
-        </ div >
+        </div>
       );
     }
   });
 
   function render() {
     React.render(
-      <Content/>,
+      <Content />,
       document.body
     );
   }

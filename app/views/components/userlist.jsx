@@ -1,4 +1,5 @@
 var UserComponent = function (socket) {
+  var UserActions = require('./../../actions/UserActions');
   var Users;
 
   var UsersList = React.createClass({
@@ -30,7 +31,7 @@ var UserComponent = function (socket) {
     },
 
     render: function () {
-      Users = (<div>Loading users...</div>);
+      Users = (<div>Загрузка пользователей...</div>);
 
       if (this.state.users) {
         Users = this.state.users.map(function(user) {
@@ -88,6 +89,10 @@ var UserComponent = function (socket) {
         }
       },
 
+      showUserInfo: function () {
+        UserActions.setUser(this.state.username);
+      },
+
       render: function() {
         var classes = ['list__item'];
 
@@ -97,7 +102,7 @@ var UserComponent = function (socket) {
 
         return (
           <li className={classes.join(' ')}>
-            <a className="name">{this.props.user.username}</a>
+            <a className="name" onClick={this.showUserInfo}>{this.props.user.username}</a>
           </li>
         );
       }
