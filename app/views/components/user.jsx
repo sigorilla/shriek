@@ -22,6 +22,7 @@ var UserComponent = function (socket) {
     },
 
     render: function () {
+      var defaultValue = '—';
       var body;
       if (this.state.loaded) {
         body = (
@@ -35,28 +36,26 @@ var UserComponent = function (socket) {
             )}
             </div>
             <div className="form__row">
-              <strong>Имя: </strong>
-              <span>{this.state.user.setting.first_name}</span>
+              <span><strong>Имя:</strong></span>
+              <span>{this.state.user.setting.first_name || defaultValue}</span>
             </div>
             <div className="form__row">
-              <strong>Фамилия: </strong>
-              <span>{this.state.user.setting.last_name}</span>
+              <span><strong>Фамилия:</strong></span>
+              <span>{this.state.user.setting.last_name || defaultValue}</span>
             </div>
             <div className="form__row">
-              <strong>Почта: </strong>
-              <span>{this.state.user.setting.email}</span>
+              <span><strong>Почта:</strong></span>
+              <span>{this.state.user.setting.email || defaultValue}</span>
             </div>
             <div className="form__row">
-              <strong>Описание: </strong>
-              <span>{this.state.user.setting.description}</span>
+              <span><strong>Описание:</strong></span>
+              <span>{this.state.user.setting.description || defaultValue}</span>
             </div>
           </div>
         );
       } else {
         body = (
-          <div className="form__row">
-            <span className="fa fa-circle-o-notch fa-spin fa-2x"></span>
-          </div>
+          <span className="fa fa-circle-o-notch fa-spin fa-2x"></span>
         );
       }
       var footer = (

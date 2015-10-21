@@ -97,7 +97,7 @@ var ChatComponent = function (socket) {
     componentDidUpdate: function () {},
 
     clickMoreHandler: function() {
-      var skip = MessagesStore.getState().skip; // подписываемся на изменения store
+      var skip = MessagesStore.getState().skip;
       MessagesActions.getMessages(socket, skip);
     },
 

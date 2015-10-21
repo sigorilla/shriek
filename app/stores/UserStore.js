@@ -40,6 +40,8 @@ var UserStoreFunction = function (socket) {
   };
 
   UserStore.prototype.hideUserInfo = function () {
+    this.username = '';
+    this.user = {};
     this.showInfo = false;
     this.loaded = false;
   };
