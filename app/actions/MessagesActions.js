@@ -98,7 +98,7 @@ var MessagesActions = alt_obj.createActions({
       if (data.status === 'ok') {
         // notification API
         if (data.message.username !== localStorage.userName) {
-          var ChannelsStore = require('./../stores/ChannelsStore')(socket); // подключаем стор
+          var ChannelsStore = require('./../stores/ChannelsStore')(socket);
           var author = ChannelsStore.state.userList.filter(function (user) {
             return user.username === data.message.username;
           })[0];

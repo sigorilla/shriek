@@ -5,6 +5,7 @@ var ChatComponent = function (socket) {
 
   var ChannelsStore = require('./../../stores/ChannelsStore')(socket);
   var ChannelUsers = require('../../views/components/channelUsers.jsx')(socket);
+  var MessageAuthor = require('../../views/components/message-author.jsx')(socket);
 
   var ChatBox = React.createClass({
     getInitialState: function () {
@@ -350,6 +351,7 @@ var ChatComponent = function (socket) {
 
     render: function () {
       var _this = this;
+      var pluginKey = 0;
       var messagePlugins = this.props.plugins || [];
       var typingUsers = MessagesStore.getState().typingUsers;
       var showTypingUsers = typingUsers.slice(0, 3).map(function (username) {
@@ -395,7 +397,8 @@ var ChatComponent = function (socket) {
             <textarea className="send__text" onKeyDown={this.handleKeyDown} onKeyUp={this.resize} onInput={this.resize} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
             <div className="send__plugins">
               {messagePlugins.map(function (PluginComponent) {
-                return <PluginComponent />;
+                pluginKey++;
+                return <PluginComponent key={pluginKey} />;
               })}
             </div>
             <div className="send__right">
@@ -422,55 +425,6 @@ var ChatComponent = function (socket) {
       return (
         <span className='msg__date' title={fullDate}>{date}</span>
       )
-    }
-  });
-
-  var MessageAuthor = React.createClass({
-    getInitialState: function () {
-      return {
-        username: this.props.username,
-        user: {
-          full_name: '',
-          setting: {
-            image: '',
-            email: ''
-          }
-        },
-        showInfo: false
-      };
-    },
-
-    componentDidMount: function () {
-      var _this = this;
-      socket.on('user info', function (data) {
-        if (data.status === 'ok') {
-          if (data.user.username === _this.state.username) {
-            _this.setState({user: data.user});
-          }
-        }
-      });
-    },
-
-    showUserInfo: function () {
-      var _this = this;
-      socket.emit('user info', {username: _this.props.username});
-      _this.setState({showInfo: !_this.state.showInfo});
-    },
-
-    render: function () {
-      return (
-        <span className="msg__author">
-          {this.state.showInfo === true && (
-            <div className="popup popup__user">
-              <img src={this.state.user.setting.image} />
-              <div>Name: {this.state.user.full_name}</div>
-              <div>Email: {this.state.user.setting.email}</div>
-            </div>
-          )}
-          <span className="msg__author-name" onClick={this.showUserInfo}>{this.state.username}</span>
-          <span className="msg__author-divider">:</span>
-        </span>
-      );
     }
   });
 

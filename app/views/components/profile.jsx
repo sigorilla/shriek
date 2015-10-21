@@ -20,7 +20,7 @@ var ProfileComponent = function (socket) {
 
       socket.on('user info', function (data) {
         if (data.status === 'ok') {
-          if (data.user.username === localStorage.username) {
+          if (data.user.username === localStorage.userName) {
             _this.setState({image: data.user.setting.image});
           }
         }
@@ -29,7 +29,7 @@ var ProfileComponent = function (socket) {
       socket.on('user leave', function (data) {
         if (data.status === 'ok') {
           if (data.user.hasOwnProperty('username')) {
-            if (localStorage.userName === data.user.username) {
+            if (data.user.username === localStorage.userName) {
               AuthActions.makeLogOut();
             }
           }

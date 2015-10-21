@@ -98,7 +98,7 @@ var SettingComponent = function (socket) {
         <form className="form setting" onSubmit={this.handleSave}>
           <div className="form__row">
             <label className="form__label"><i className="fa fa-user"></i></label>
-            <input className="form__text"type="text" id="inputNick" placeholder="Username" value={localStorage.userName} readonly />
+            <input className="form__text" type="text" id="inputNick" placeholder="Username" defaultValue={localStorage.userName} readOnly />
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputFirstName"><i className="fa fa-edit"></i></label>

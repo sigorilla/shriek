@@ -19,6 +19,9 @@ var LoginComponent = require('../../views/components/login.jsx')(socket);
 // PROFILE MODULE
 var ProfileComponent = require('../../views/components/profile.jsx')(socket);
 
+// USER MODULE
+var UserModalComponent = require('../../views/components/user.jsx')(socket);
+
 // SETTING MODULE
 var SettingComponent = require('../../views/components/setting.jsx')(socket);
 
@@ -81,6 +84,7 @@ var ReconnectComponent = require('../../views/components/reconnect.jsx')(socket)
           <LoginComponent />
           <SearchResultComponent />
           <ErrorComponent />
+          <UserModalComponent />
           <ChatApp />
         </div>
       );

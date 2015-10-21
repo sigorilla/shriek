@@ -2,6 +2,7 @@ var ChannelUsersComponent = function (socket) {
 
   var ChannelUsersStore = require('./../../stores/ChannelUsersStore')(socket);
   var ChannelUsersActions = require('./../../actions/ChannelUsersActions');
+  var UserActions = require('./../../actions/UserActions');
 
   var ChannelUsers = React.createClass({
     getInitialState: function () {
@@ -63,10 +64,14 @@ var ChannelUsersComponent = function (socket) {
   });
 
   var ChannelUser = React.createClass({
+    showUserInfo: function () {
+      UserActions.setUser(this.props.user);
+    },
+
     render: function () {
       return (
         <li className="list__item">
-          <span>{this.props.user}</span>
+          <span onClick={this.showUserInfo}>{this.props.user}</span>
         </li>
       );
     }
