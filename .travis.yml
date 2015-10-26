@@ -1,3 +1,5 @@
+sudo: required
+
 language: node_js
 
 node_js:
@@ -16,7 +18,9 @@ install:
   - npm i -g gulp
   - npm i -g mocha
   - bower install
-  - wget -O- https://toolbelt.heroku.com/install.sh | sh
+  - wget -O install-heroku.sh https://toolbelt.heroku.com/install.sh
+  - sudo sh install-heroku.sh
+  - echo 'PATH="/usr/local/heroku/bin:$PATH"' >> ~/.profile
 
 before_script:
   - heroku local &
