@@ -9,7 +9,7 @@
   "scripts": {
     "postinstall": "sh ./scripts/setup.sh",
     "start": "node index.js",
-    "test": "heroku local && mocha -t 10000"
+    "test": "mocha -t 10000"
   },
   "license": "MIT",
   "main": "index.js",

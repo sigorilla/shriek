@@ -16,9 +16,10 @@ install:
   - npm i -g gulp
   - npm i -g mocha
   - bower install
+  - wget -O- https://toolbelt.heroku.com/install.sh | sh
 
-script:
-  # No test
+before_script:
+  - heroku local &
 
 deploy:
   provider: heroku
