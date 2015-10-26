@@ -1,11 +1,12 @@
-var config = require('../app/configs/config');
-var port = config.get('port') || 3000;
-var chai = require('chai');
 var mocha = require('mocha');
+var chai = require('chai');
 var should = chai.should();
+var port = process.env.PORT || 5000;
 var io = require('socket.io-client');
+var exec = require('child_process').exec;
+var server;
 
-describe('Connection test', function() {
+describe('Connection', function () {
   var socket;
   var options = {
     transports: ['websocket'],
@@ -19,68 +20,54 @@ describe('Connection test', function() {
 
   var testmsg = 'Echo';
 
-  beforeEach(function(done) {
-    socket = io.connect('http://localhost:' + port, options);
+  beforeEach(function (done) {
+    server = exec('heroku local', function (err, stdout, stderr) {
+      socket = io.connect('http://localhost:' + port, options);
 
-    socket.on('connect', function() {
-      // console.log('Worked...');
-      done();
-    });
-
-    socket.on('disconnect', function() {
-      // console.log('Disconnected...');
+      socket.on('connect', function () {
+        done();
+      });
     });
   });
 
-  afterEach(function(done) {
-    // Cleanup
+  afterEach(function (done) {
     if (socket.connected) {
-      // console.log('Disconnecting...');
       socket.disconnect();
-    } else {
-      // There will not be a connection unless you have done() in beforeEach, socket.on('connect'...)
-      // console.log('No connection to break...');
+      server.kill();
     }
     done();
   });
 
-  it('Connection', function(done) {
-
+  it('should be true', function (done) {
     socket.connected.should.equal(true);
 
-    socket.disconnect();
     done();
-
   });
 
-  it('User entering', function(done) {
+  describe('User', function () {
+    it('enters', function (done) {
+      socket.once('user enter', function (data) {
+        data.status.should.equal('ok');
+        data.user.username.should.equal(testuser.username);
 
-    socket.once('user enter', function(data) {
-      data.status.should.equal('ok');
-      data.user.username.should.equal(testuser.username);
+        done();
+      });
 
-      socket.disconnect();
-      done();
+      socket.emit('user enter', testuser);
     });
 
-    socket.emit('user enter', testuser);
+    it('enters with wrong data', function (done) {
+      socket.once('user enter', function (data) {
+        data.status.should.equal('error');
 
-  });
+        done();
+      });
 
-  it('User not entering', function(done) {
-
-    socket.once('user enter', function(data) {
-      data.status.should.equal('error');
-
-      socket.disconnect();
-      done();
+      socket.emit('user enter', {
+        username: '1',
+        password: '1'
+      });
     });
-
-    socket.emit('user enter', {
-      username: '1',
-      password: '1'
-    });
-
   });
 
 });
