@@ -3,8 +3,6 @@ var chai = require('chai');
 var should = chai.should();
 var port = process.env.PORT || 5000;
 var io = require('socket.io-client');
-var exec = require('child_process').exec;
-var server;
 
 describe('Message', function () {
   var socket;
@@ -20,12 +18,10 @@ describe('Message', function () {
   var testmsg = 'Echo';
 
   beforeEach(function (done) {
-    server = exec('heroku local', function (err, stdout, stderr) {
-      socket = io.connect('http://localhost:' + port, options);
+    socket = io.connect('http://localhost:' + port, options);
 
-      socket.on('connect', function () {
-        done();
-      });
+    socket.on('connect', function () {
+      done();
     });
   });
 

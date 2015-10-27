@@ -3,7 +3,7 @@
 Yet another chat
 
 # Build workflow (short)
-```
+```sh
 npm install
 npm run init
 ```
@@ -16,29 +16,37 @@ npm run init
 
 ## Стартовать ноду
 
-`node .`
+`heroku local`
+
+> При этом стоит помнить, что у вас должна быть настроена Heroku. [См. здесь](https://github.com/shri-2015-org/shriek/wiki/%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0-%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D1%85-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%BE%D0%B2)
 
 ## Тестирование сервера
-1. Стартоните приложение: `node .`
-2. В другом окне консоли запустите тесты: `mocha`
+1. Стартоните приложение: `heroku local`
+2. В другом окне консоли запустите тесты: `mocha -t 10000`
 
 # Files structure
-* app — основное приложение
-  * assets
-    * css — файлы sass для модулей
-    * js — основной файл фронта, куда объявляются все инклуды
-  * components — внешние компоненты (включено в gitignore)
-  * configs — файлы конфига для express
-  * controllers — основные js-файлы express
-  * models — модели express
-  * modules — модули express
-  * views
-    * layouts — тут html-шаблон страницы, который потом копируется в public/
-    * components — react-компоненты
-* public — все статичные файлы, здесь лежит базовый index.html, который собирается из вьюх
-  * assets
-    * css
-    * js
+* `app` — основное приложение
+  * `actions` —
+  * `assets`
+    * `css` — файлы sass для модулей
+    * `js` — основной файл фронта, куда объявляются все инклуды
+  * `components` — внешние компоненты Bower (включено в `.gitignore`)
+  * `configs` — файлы конфига для express
+  * `controllers` — основные js-файлы express
+  * `models` — модели Mongoose
+  * `modules` — модули Express и Socket.io
+  * `stores` — хранение стейтов используя Alt.JS
+  * `views`
+    * `components` — react-компоненты
+    * `layouts` — тут html-шаблон страницы, который потом копируется в `public`
+* `node_modules`
+* `public` — все статичные файлы, здесь лежит базовый index.html, который собирается из `views`
+  * `assets` — выходные файлы
+    * `css`
+    * `fonts`
+    * `js`
+* `scripts` — различные скрипты для установки
+* `test` — папка с тестами для `mocha`
 
 # API
 ## Description
