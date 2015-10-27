@@ -71,9 +71,12 @@
   float: left
   margin-right: 5px
   font-weight: bolder
-  cursor: pointer
 
-  &:hover
+  .msg__author-name
+    cursor: pointer
+
+  .msg__author-name:hover,
+  .msg__author-self
     text-decoration: underline
 
 .msg__text
@@ -95,6 +98,9 @@
     margin: 0 0 10px
     border-left: 5px solid #eee
     max-width: 50%
+
+    blockquote
+      margin-top: 5px
 
   pre
     margin: 0
@@ -137,6 +143,7 @@
       margin-right: 10px
 
     a
+      background-color: #fff
       border: 1px solid #e0e0e0;
       border-radius: 4px;
       display: inline-block

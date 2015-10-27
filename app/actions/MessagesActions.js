@@ -66,10 +66,10 @@ var MessagesActions = alt_obj.createActions({
           var tmpHeight = scroll + parseInt($('.msg__list > div:last-child').height());
           if (tmpHeight >= (allheight - height) || force === true) {
             $('.msg__list').animate(
-              { scrollTop: allheight },
-              100,
+              {scrollTop: allheight},
+              500,
               'swing',
-              function() {
+              function () {
                 window.shriek.stopscroll = false;
               }
             );
@@ -130,7 +130,7 @@ var MessagesActions = alt_obj.createActions({
         // проверяем, правда ли сообщение пришло в текущий чат?
         if (data.message.channel === socket.activeChannel) {
           _this.actions.pushMessage({message: data.message});
-          _this.actions.scrollChat(false);
+          _this.actions.scrollChat(true);
         }
       }
     });
@@ -138,11 +138,9 @@ var MessagesActions = alt_obj.createActions({
       _this.actions.updateMessages(data);
       _this.actions.updateSkip(data.newSkip);
       if (data.hasOwnProperty('indata')) {
-        _this.actions.scrollChat(
-          (data.indata.hasOwnProperty('scrollAfter')
-            ? data.indata.scrollAfter
-            : false)
-        );
+        setTimeout(function () {
+          _this.actions.scrollChat(data.indata.scrollAfter || false);
+        }, 1000);
       }
     });
 

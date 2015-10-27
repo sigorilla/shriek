@@ -17,16 +17,17 @@ var ErrorComponent = React.createClass({
 
   onChange: function (state) {
     this.setState(state);
-    setTimeout(ErrorActions.shiftError, 2000);
+    if (this.state.errors.length > 0) {
+      setTimeout(ErrorActions.shiftError, 2000);
+    }
   },
 
   render: function () {
-    var erT = (new Date()).getTime();
     return (
       <div className="error__list">
-        {this.state.errors.map(function (error) {
+        {this.state.errors.map(function (error, index) {
           return (
-            <div className="error__item" key={erT}>{error}</div>
+            <div className="error__item" key={index}>{error}</div>
           )
         })}
       </div>

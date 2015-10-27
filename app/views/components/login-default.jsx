@@ -8,11 +8,11 @@ var LoginDefault = function (socket) {
         <div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputUsername"><i className="fa fa-user"></i></label>
-            <input className={this.props.classUser} onChange={this.props.handleName} type="username" id="inputUsername" placeholder="Логин"/>
+            <input className={this.props.classUser} onChange={this.props.handleName} type="username" id="inputUsername" placeholder="Логин (от 5 латинских символов и цифр)"/>
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
-            <input className={this.props.classPass} onChange={this.props.handlePassword} type="password" id="inputPassword" placeholder="Пароль"/>
+            <input className={this.props.classPass} onChange={this.props.handlePassword} type="password" id="inputPassword" placeholder="Пароль (от 6 символов)" />
           </div>
           <button className="btn" type="submit">Войти</button>
           <div className="form__row">или используйте соцсети:</div>

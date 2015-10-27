@@ -65,7 +65,7 @@ var UserModule = function (socket, io) {
           out.user = doc;
         } else {
           out.status = 'error';
-          out.error_message = 'Неверный пароль';
+          out.error_message = 'Неверный пароль. Попробуйте другой пароль.';
         }
 
         callbackUserEnter(out);
@@ -80,15 +80,12 @@ var UserModule = function (socket, io) {
           if (err) {
             out.status = 'error';
 
-            if (err.errors.user && err.errors.password) {
-              // Validation failed
-              out.error_message = 'not enough symbols';
-            } else if (err.errors.user) {
-              out.error_message = err.errors.user.message;
+            if (err.errors.username) {
+              out.error_message = err.errors.username.message;
             } else if (err.errors.password) {
               out.error_message = err.errors.password.message;
             } else {
-              out.error_message = 'Пользователь не найден';
+              out.error_message = 'Пользователь не найден.';
             }
           } else {
             out.status = 'ok';

@@ -10,7 +10,7 @@ var LoginPassport = function (socket) {
             <label className="form__label" htmlFor="inputPassword"><i className="fa fa-asterisk"></i></label>
             <input className={this.props.classPass} onChange={this.props.handlePassword} type="password" id="inputPassword" placeholder="Пароль"/>
           </div>
-          <button className="btn" type="submit">Sign in</button>
+          <button className="btn" type="submit">Войти</button>
         </div>
       );
 
