@@ -130,7 +130,7 @@ var MessagesActions = alt_obj.createActions({
         // проверяем, правда ли сообщение пришло в текущий чат?
         if (data.message.channel === socket.activeChannel) {
           _this.actions.pushMessage({message: data.message});
-          _this.actions.scrollChat(true);
+          _this.actions.scrollChat(data.message.username === localStorage.userName);
         }
       }
     });
