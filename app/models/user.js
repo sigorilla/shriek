@@ -86,12 +86,12 @@ User.methods.checkHashedPassword = function (hashedPassword) {
 
 User.path('username').validate(function (v) {
   return v.length > 4 && v.length < 30 && !/[^a-z_\w]+/i.test(v)
-}, 'Никнейм не прошел валидацию');
+}, 'Никнейм не прошел валидацию. От 5 до 30 латинских символов и цифр с нижним подчеркиванием.');
 
 User.path('hashedPassword').validate(function (v) {
   if (this._plainPassword) {
     if (this._plainPassword.length < 6) {
-      this.invalidate('password', 'password must be at least 6 characters.');
+      this.invalidate('password', 'Пароль должен быть от 6 символов.');
     }
   }
 

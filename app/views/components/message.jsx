@@ -47,7 +47,7 @@ var ChatComponent = function (socket) {
           callback();
         }
       } else {
-        callback('Enter message, please!');
+        callback('Введите сообщение, пожалуйста!');
       }
 
     },
