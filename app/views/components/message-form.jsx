@@ -48,6 +48,14 @@ var MessageFormComponent = function (socket) {
         _this.refs.submitButton.getDOMNode().removeAttribute('disabled');
         _this.setState({loadingAttach: false});
       });
+
+      socket.on('reconnect', function () {
+        if (_this.state.loadingAttach) {
+          ErrorActions.addError('Ошибка загрузки. Повторите попытку.');
+          _this.refs.submitButton.getDOMNode().removeAttribute('disabled');
+          _this.setState({loadingAttach: false});
+        }
+      });
     },
 
     componentWillUnmount: function () {
