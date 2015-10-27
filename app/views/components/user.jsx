@@ -25,7 +25,7 @@ var UserComponent = function (socket) {
       var defaultValue = '—';
       var body;
       var mailto = defaultValue;
-      if (this.state.loaded) {
+      if (this.state.loaded && this.state.user) {
         if (this.state.user.setting.email) {
           mailto = <a href={'mailto:' + this.state.user.setting.email}>{this.state.user.setting.email}</a>;
         }

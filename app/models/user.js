@@ -27,23 +27,28 @@ var User = new Schema({
   },
   setting: {
     email: {
-      type: String
+      type: String,
+      default: ''
     },
     image: {
-      type: String
+      type: String,
+      default: ''
     },
     first_name: {
-      type: String
+      type: String,
+      default: ''
     },
     last_name: {
-      type: String
+      type: String,
+      default: ''
     },
     sex: {
       type: String,
       enum: ['female', 'male']
     },
     description: {
-      type: String
+      type: String,
+      default: ''
     }
   }
 });
