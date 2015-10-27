@@ -48,6 +48,14 @@ var MessageFormComponent = function (socket) {
         _this.refs.submitButton.getDOMNode().removeAttribute('disabled');
         _this.setState({loadingAttach: false});
       });
+
+      socket.on('reconnect', function () {
+        if (_this.state.loadingAttach) {
+          ErrorActions.addError('Ошибка загрузки. Повторите попытку.');
+          _this.refs.submitButton.getDOMNode().removeAttribute('disabled');
+          _this.setState({loadingAttach: false});
+        }
+      });
     },
 
     componentWillUnmount: function () {
@@ -155,9 +163,12 @@ var MessageFormComponent = function (socket) {
       var file = e.target.files[0];
       this.setState({selectedFile: file});
       var name = localStorage.userName + (new Date()).getTime().toString();
+      var FILE_SIZE = 10485760;
+
       if (!this.state.loadingAttach && this.state.attachments.length < 5 &&
-        file && file.size <= 10485760 && window.File && window.FileReader) {
+        file && file.size <= FILE_SIZE && window.File && window.FileReader) {
         var FReader = new FileReader();
+
         this.refs.submitButton.getDOMNode().setAttribute('disabled', 'disabled');
         FReader.onload = function (event) {
           socket.emit('file upload', {data: event.target.result, name: name});
@@ -171,11 +182,12 @@ var MessageFormComponent = function (socket) {
           type: file.type
         });
       }
+
       if (file) {
         if (this.state.loadingAttach) {
           ErrorActions.addError('Файл еще грузиться. Пожалуйста, подождите.');
         }
-        if (file.size > 10485760) {
+        if (file.size > FILE_SIZE) {
           ErrorActions.addError('Слишком большой файл. Максимальный размер — 10 МБ.');
         }
         if (this.state.attachments.length >= 5) {

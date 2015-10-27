@@ -24,7 +24,11 @@ var UserComponent = function (socket) {
     render: function () {
       var defaultValue = '—';
       var body;
+      var mailto = defaultValue;
       if (this.state.loaded) {
+        if (this.state.user.setting.email) {
+          mailto = <a href={'mailto:' + this.state.user.setting.email}>{this.state.user.setting.email}</a>;
+        }
         body = (
           <div className="modal__user">
             <div className="modal__user_img">
@@ -45,7 +49,7 @@ var UserComponent = function (socket) {
             </div>
             <div className="form__row">
               <span><strong>Почта:</strong></span>
-              <span>{this.state.user.setting.email || defaultValue}</span>
+              <span>{mailto}</span>
             </div>
             <div className="form__row">
               <span><strong>Описание:</strong></span>

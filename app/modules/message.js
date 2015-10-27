@@ -17,16 +17,35 @@ var S3_BUCKET = process.env.S3_BUCKET_NAME;
 var files = {};
 
 var typeOfFiles = {
+  'mp3': 'audio',
+  'wav': 'audio',
+  'flac': 'audio',
+  'pdf': 'pdf',
+  'js': 'code',
+  'php': 'code',
+  'java': 'code',
+  'py': 'code',
   'jpg': 'image',
   'jpeg': 'image',
   'png': 'image',
   'gif': 'image',
-  'pdf': 'pdf',
-  'php': 'script',
-  'js': 'script',
-  'jsx': 'script',
-  'java': 'script',
-  'py': 'script'
+  'mov': 'video',
+  'mp4': 'video',
+  'avi': 'video',
+  'doc': 'word',
+  'docx': 'word',
+  'xls': 'excel',
+  'xlsx': 'excel',
+  'csv': 'excel',
+  'ppt': 'powerpoint',
+  'pptx': 'powerpoint',
+  'pps': 'powerpoint',
+  'zip': 'zip',
+  'rar': 'zip',
+  'tar': 'zip',
+  'gz': 'zip',
+  '7z': 'zip',
+  'txt': 'text'
 };
 
 var shriekPlugins = require('./plugins');
@@ -117,7 +136,7 @@ var MessageModule = function(socket) {
       filesize: data.size,
       data: '',
       downloaded: 0,
-      ext: (/[.]/.test(filename)) ? (/[^.]+$/.exec(filename)) : '',
+      ext: (/[.]/.test(filename)) ? (/[^.]+$/.exec(filename))[0] : '',
       filename: filename,
       type: data.type
     };
@@ -141,7 +160,7 @@ var MessageModule = function(socket) {
         delete files[name];
       } else {
         files[name].handler = fd;
-        socket.emit('file more', {place: place, percent: 0 });
+        socket.emit('file more', {place: place, percent: 0});
       }
     });
   });
@@ -197,7 +216,7 @@ var MessageModule = function(socket) {
                     status: 'ok',
                     attach: {
                       url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + s3File,
-                      type: typeOfFiles[files[name].ext] || 'other',
+                      type: typeOfFiles[files[name].ext] || '',
                       name: files[name].filename,
                       s3_key: s3File
                     }

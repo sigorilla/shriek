@@ -1,12 +1,10 @@
-var config = require('../app/configs/config');
-var port = config.get('port') || 3000;
-var chai = require('chai');
 var mocha = require('mocha');
+var chai = require('chai');
 var should = chai.should();
+var port = process.env.PORT || 5000;
 var io = require('socket.io-client');
 
-describe('Message test', function () {
-
+describe('Message', function () {
   var socket;
   var options = {
     transports: ['websocket'],
@@ -23,35 +21,23 @@ describe('Message test', function () {
     socket = io.connect('http://localhost:' + port, options);
 
     socket.on('connect', function () {
-      // console.log('Worked...');
       done();
-    });
-
-    socket.on('disconnect', function () {
-      // console.log('Disconnected...');
     });
   });
 
   afterEach(function (done) {
-    // Cleanup
     if (socket.connected) {
-      // console.log('Disconnecting...');
       socket.disconnect();
-    } else {
-      // There will not be a connection unless you have done() in beforeEach, socket.on('connect'...)
-      // console.log('No connection to break...');
     }
     done();
   });
 
-  it('Message sending', function (done) {
-
+  it('send', function (done) {
     socket.once('message send', function (data) {
       data.status.should.equal('ok');
       data.message.username.should.equal(testuser.username);
-      data.message.text.should.equal(testmsg);
+      data.message.text.should.be.a('String');
 
-      socket.disconnect();
       done();
     });
 
@@ -65,15 +51,13 @@ describe('Message test', function () {
     });
 
     socket.emit('user enter', testuser);
-
   });
 
-  it('Message sending without login', function (done) {
+  it('send without login', function (done) {
 
     socket.once('message send', function (data) {
       data.status.should.equal('error');
 
-      socket.disconnect();
       done();
     });
 
