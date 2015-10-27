@@ -71,9 +71,12 @@
   float: left
   margin-right: 5px
   font-weight: bolder
-  cursor: pointer
 
-  &:hover
+  .msg__author-name
+    cursor: pointer
+
+  .msg__author-name:hover,
+  .msg__author-self
     text-decoration: underline
 
 .msg__text
