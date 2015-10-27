@@ -147,6 +147,10 @@ var ChatComponent = function (socket) {
   });
 
   var Attach = React.createClass({
+    newImage: function () {
+
+    },
+
     render: function () {
       var attachIcon = ['fa', 'file', this.props.attach.type, 'o']
         .join('-')
@@ -158,9 +162,42 @@ var ChatComponent = function (socket) {
           <span>{this.props.attach.name}</span>
         </a>
         {this.props.attach.type === 'image' && (
-          <img src={this.props.attach.url} />
+          <AttachImage src={this.props.attach.url} updateLink={this.newImage} />
         )}
       </div>);
+    }
+  });
+
+  var AttachImage = React.createClass({
+    componentDidMount: function () {
+      var image = this.refs.image.getDOMNode();
+      image.crossOrigin = 'Anonymous';
+      image.src = this.props.src;
+    },
+
+    handleLoad: function (e) {
+      try {
+        var canvas = fx.canvas();
+      } catch (e) {
+        // alert(e);
+        return;
+      }
+
+      var image = this.refs.image.getDOMNode();
+      var texture = canvas.texture(image);
+
+      canvas.draw(texture).update().replace(image);
+
+      $(document).mousemove(function (e) {
+        var offset = $(canvas).offset();
+        var x = e.pageX - offset.left;
+        var y = e.pageY - offset.top;
+        canvas.draw(texture).swirl(x, y, 200, 2).update();
+      });
+    },
+
+    render: function () {
+      return (<img ref="image" onLoad={this.handleLoad} />);
     }
   });
 
