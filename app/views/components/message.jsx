@@ -129,6 +129,10 @@ var ChatComponent = function (socket) {
         classes.push('msg__searched');
       }
 
+      var Attachments = this.props.message.attachments.map(function (attach) {
+        return (<Attach attach={attach}  key={'msg_' + attach._id} />);
+      });
+
       return (
         <div className={classes.join(' ')}>
           <MessageDate date={this.props.message.created_at}/>
@@ -136,23 +140,27 @@ var ChatComponent = function (socket) {
           <div
             className="msg__text"
             dangerouslySetInnerHTML={{__html: message}} />
-          <div className="msg__attachments">
-          {this.props.message.attachments.map(function (attach) {
-            return (
-            <div className="msg__attachments_item" key={'msg_' + attach._id}>
-              <a href={attach.url} target="_blank">
-                <span className="fa fa-file"></span>
-                <span>{attach.name}</span>
-              </a>
-              {attach.type === 'image' && (
-                <img src={attach.url} />
-              )}
-            </div>
-            )
-          })}
-          </div>
+          <div className="msg__attachments">{Attachments}</div>
         </div>
       );
+    }
+  });
+
+  var Attach = React.createClass({
+    render: function () {
+      var attachIcon = ['fa', 'file', this.props.attach.type, 'o']
+        .join('-')
+        .replace('--', '-');
+
+      return (<div className="msg__attachments_item">
+        <a href={this.props.attach.url} target="_blank">
+          <span className={['fa', attachIcon].join(' ')}></span>
+          <span>{this.props.attach.name}</span>
+        </a>
+        {this.props.attach.type === 'image' && (
+          <img src={this.props.attach.url} />
+        )}
+      </div>);
     }
   });
 
