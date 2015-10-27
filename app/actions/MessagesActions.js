@@ -67,7 +67,7 @@ var MessagesActions = alt_obj.createActions({
           if (tmpHeight >= (allheight - height) || force === true) {
             $('.msg__list').animate(
               {scrollTop: allheight},
-              100,
+              500,
               'swing',
               function () {
                 window.shriek.stopscroll = false;
@@ -138,11 +138,9 @@ var MessagesActions = alt_obj.createActions({
       _this.actions.updateMessages(data);
       _this.actions.updateSkip(data.newSkip);
       if (data.hasOwnProperty('indata')) {
-        _this.actions.scrollChat(
-          (data.indata.hasOwnProperty('scrollAfter')
-            ? data.indata.scrollAfter
-            : false)
-        );
+        setTimeout(function () {
+          _this.actions.scrollChat(data.indata.scrollAfter || false);
+        }, 1000);
       }
     });
 
