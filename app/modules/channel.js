@@ -166,15 +166,12 @@ var ChannelModule = function (socket) {
         q.skip(newSkip * limit); // offset
       }
 
-
-
       q.exec(function (err, dbdata) { // выполняем запрос
         if (err) {
           var error = new Error('Ошибка получения сообщений');
 
           reject(error);
         } else {
-
           var out = {
             status: 'ok',
             // возвращаем сообщения или пустой массив, чтобы не возвращать null

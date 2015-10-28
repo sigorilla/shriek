@@ -20,11 +20,13 @@ var MessagesActions = alt_obj.createActions({
     if (data.force == true) {
       this.actions.hideMoreButton(data.hideMore);
       if (data.messages.length > 0) {
-        actualDate = new Date(data.messages[0].created_at);
+        actualDate = new Date();
       } else {
         actualDate = new Date();
       }
       this.skip = 0;
+    } else {
+      actualDate = new Date();
     }
     this.dispatch(data); // это блин ТРИГГЕР, на который реагирует стор
   },
@@ -165,7 +167,11 @@ var MessagesActions = alt_obj.createActions({
 
   getMessages: function (socket, skip) {
     if (!actualDate) actualDate = new Date();
-    socket.emit('channel get', {channel: socket.activeChannel, date: actualDate, skip: skip});
+    socket.emit('channel get', {
+      channel: socket.activeChannel,
+      date: actualDate,
+      skip: skip
+    });
     socket.emit('channel info', {slug: socket.activeChannel});
   },
 
