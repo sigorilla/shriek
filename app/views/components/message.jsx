@@ -178,8 +178,7 @@ var ChatComponent = function (socket) {
     handleLoad: function (e) {
       try {
         var canvas = fx.canvas();
-      } catch (e) {
-        // alert(e);
+      } catch (err) {
         return;
       }
 
@@ -188,12 +187,62 @@ var ChatComponent = function (socket) {
 
       canvas.draw(texture).update().replace(image);
 
-      $(document).mousemove(function (e) {
+      var filters = [
+        function (x, y) {
+          canvas
+            .draw(texture)
+            .hexagonalPixelate(0, 0, 3)
+            .swirl(x, y, 200, 2)
+            .update();
+        },
+        function (x, y) {
+          canvas
+            .draw(texture)
+            .sepia(0.5)
+            .bulgePinch(x, y, 100, -0.5)
+            .update();
+        },
+        function (x, y) {
+          canvas
+            .draw(texture)
+            .unsharpMask(22, 2)
+            .swirl(x, y, 100, 1)
+            .update();
+        },
+        function (x, y) {
+          canvas
+            .draw(texture)
+            .vignette(0.9, 0.6)
+            .dotScreen(x, y, 0, 4.53)
+            .update();
+        },
+        function (x, y) {
+          canvas
+            .draw(texture)
+            .hueSaturation(-0.4, 0.56)
+            .tiltShift(
+              $(canvas).width() / 2,
+              $(canvas).height() / 2,
+              x,
+              y,
+              15,
+              200)
+            .update();
+        },
+        function (x, y) {
+          canvas.draw(texture).zoomBlur(x, y, 0.11).update();
+        },
+      ];
+
+      var n = Math.floor(Math.random() * filters.length);
+      filters[n]($(canvas).width() / 2, $(canvas).height() / 2);
+      $(canvas).mousemove(function (e) {
         var offset = $(canvas).offset();
         var x = e.pageX - offset.left;
         var y = e.pageY - offset.top;
-        canvas.draw(texture).swirl(x, y, 200, 2).update();
+        filters[n](x, y);
       });
+
     },
 
     render: function () {
