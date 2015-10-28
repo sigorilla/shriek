@@ -188,7 +188,7 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
 
     render: function () {
       var body = (
-        <form className="form" onSubmit={this.handleSubmit}>
+        <form ref="channelForm" className="form" onSubmit={this.handleSubmit}>
           <div className="form__row">
                 {ChannelsStore.getState().hasError &&(
                   <div>{ChannelsStore.getState().hasError}</div>
@@ -213,7 +213,7 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
       );
       var footer = (
         <div>
-          <button className="btn" type="submit">Добавить</button>
+          <button className="btn" type="submit" onClick={this.handleSubmit}>Добавить</button>
           <span> </span>
           <button className="btn" onClick={this.handleCloseModal} type="button">Закрыть</button>
         </div>
